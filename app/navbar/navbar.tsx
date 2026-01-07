@@ -7,14 +7,16 @@ const MENU = [
 ];
 const Navbar = () => {
     return (
-        <div className="flex items-center justify-between p-4 px-12 ">
+        <div className="flex items-center justify-between p-4 px-12 bg-white ">
             <Link href="/">
-                <span className="text-2xl font-bold">SpiderSense</span>
+                <span className="text-2xl font-bold text-black">
+                    SpiderSense
+                </span>
             </Link>
             <div>
                 {MENU.map((item) => (
                     <Link key={item.name} href={item.link}>
-                        <span className="mx-4 text-white font-bold inline-block hover:scale-110 transition-transform">
+                        <span className="mx-4 text-black font-bold inline-block hover:scale-110 transition-transform">
                             {item.name}
                         </span>
                     </Link>
