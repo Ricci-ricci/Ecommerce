@@ -1,17 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-
+import Link from "next/link";
 const HeroText = () => {
     const intro = "Welcome to you";
-    const Fall = "Step beyond Boundaries with StrideXplore";
+    const Fall = "Step beyond Boundaries with SpiderSense";
 
     return (
         <div className="flex flex-col gap-6 items-center justify-center text-center">
-            <span className="text-lg">{intro}</span>
-            <span className="text-7xl font-bold">{Fall}</span>
-            <Button>
-                Get Started <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+            <span className="text-xl font-light">{intro}</span>
+            <span className="text-8xl font-bold">{Fall}</span>
+            <Link href="/shop">
+                <Button className="font-bold text-lg cursor-pointer px-6 py-4 mt-4">
+                    Shop with Us <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+            </Link>
         </div>
     );
 };

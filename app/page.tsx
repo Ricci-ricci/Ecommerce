@@ -1,7 +1,7 @@
 import BackgroundImage from "./components/BackgroundImage";
 import HeroText from "./components/heroText";
-import Container from "./layout/container";
-import Section from "./layout/section";
+import Part1 from "./components/part/part1";
+import Part2 from "./components/part/part2";
 import Navbar from "./navbar/navbar";
 const App = () => {
     return (
@@ -10,11 +10,8 @@ const App = () => {
             <BackgroundImage>
                 <HeroText />
             </BackgroundImage>
-            <Container>
-                <Section>
-                    <></>
-                </Section>
-            </Container>
+            <Part1></Part1>
+            <Part2></Part2>
         </>
     );
 };
