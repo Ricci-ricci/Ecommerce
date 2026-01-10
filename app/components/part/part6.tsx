@@ -127,14 +127,13 @@ const TrendingProduct = () => {
         </div>
     );
 };
-
-const Part3 = () => {
+const Part6 = () => {
     return (
         <Container>
             <Section>
-                <TrendingProduct />
+                <TrendingProduct></TrendingProduct>
             </Section>
         </Container>
     );
 };
-export default Part3;
+export default Part6;
