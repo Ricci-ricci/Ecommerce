@@ -1,11 +1,13 @@
+"use client";
 import BackgroundImage from "./components/BackgroundImage";
 import HeroText from "./components/heroText";
-import Part1 from "./components/part/part1";
-import Part2 from "./components/part/part2";
-import Part3 from "./components/part/part3";
-import Part4 from "./components/part/part4";
-import Part5 from "./components/part/part5";
-import Part6 from "./components/part/part6";
+import FooterPart1 from "./components/mainPart/footer";
+import Part1 from "./components/mainPart/part1";
+import Part2 from "./components/mainPart/part2";
+import Part3 from "./components/mainPart/part3";
+import Part4 from "./components/mainPart/part4";
+import Part5 from "./components/mainPart/part5";
+import Part6 from "./components/mainPart/part6";
 import Navbar from "./navbar/navbar";
 const App = () => {
     return (
@@ -20,6 +22,7 @@ const App = () => {
             <Part4></Part4>
             <Part5></Part5>
             <Part6></Part6>
+            <FooterPart1></FooterPart1>
         </>
     );
 };
