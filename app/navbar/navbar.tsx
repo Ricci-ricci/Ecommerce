@@ -7,7 +7,7 @@ const MENU = [
 ];
 const Navbar = () => {
     return (
-        <div className="flex items-center justify-between p-4 px-12 bg-white ">
+        <div className="sticky top-0 z-50 flex items-center justify-between p-4 px-12 bg-white ">
             <Link href="/">
                 <span className="text-2xl font-bold text-black">
                     SpiderSense

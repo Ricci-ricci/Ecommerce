@@ -8,11 +8,9 @@ import Part3 from "./components/mainPart/part3";
 import Part4 from "./components/mainPart/part4";
 import Part5 from "./components/mainPart/part5";
 import Part6 from "./components/mainPart/part6";
-import Navbar from "./navbar/navbar";
 const App = () => {
     return (
         <>
-            <Navbar />
             <BackgroundImage>
                 <HeroText />
             </BackgroundImage>
