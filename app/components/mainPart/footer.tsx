@@ -1,3 +1,5 @@
+"use client";
+
 import { ArrowRight, Facebook, Instagram, Twitter } from "lucide-react";
 
 const FooterPart1 = () => {

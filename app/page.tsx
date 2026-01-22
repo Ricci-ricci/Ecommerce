@@ -20,7 +20,6 @@ const App = () => {
             <Part4></Part4>
             <Part5></Part5>
             <Part6></Part6>
-            <FooterPart1></FooterPart1>
         </>
     );
 };

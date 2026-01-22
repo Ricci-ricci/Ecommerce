@@ -5,3 +5,10 @@ export const GetData = (id: string) => {
     const product = products.find((item) => item.id === Number(id));
     return product;
 };
+export const GetCategory = (category: string) => {
+    const realCategory = category.toLowerCase();
+    const categoryProduct = products.filter(
+        (item) => item.category.toLowerCase() === realCategory,
+    );
+    return categoryProduct;
+};
