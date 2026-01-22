@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useGlobal } from "../context/GlobalContext";
-import { ShoppingCart } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface Product {
     id: number;
@@ -24,62 +24,73 @@ const ProductGrid = ({ filteredProducts }: ProductGridProps) => {
     const { addToCart } = useGlobal();
 
     return (
-        <div className="flex-1 p-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                 {filteredProducts.map((product) => (
-                    <Link
+                    <div
                         key={product.id}
-                        href={`/shop/${product.id}`}
-                        className="block group"
+                        className="group flex flex-col bg-white rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100"
                     >
-                        <div className="border border-gray-200 rounded-xl p-4 shadow-sm group-hover:shadow-md transition-all duration-300 bg-white h-full flex flex-col">
-                            <div className="relative overflow-hidden rounded-md mb-4 aspect-[4/3]">
-                                <Image
-                                    src={product.image}
-                                    alt={product.name}
-                                    fill
-                                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                />
-                            </div>
-                            
-                            <div className="flex-1">
-                                <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-red-600 transition-colors">
-                                    {product.name}
-                                </h3>
-                                <p className="text-gray-500 text-sm line-clamp-2 mb-3">
-                                    {product.description}
-                                </p>
+                        {/* Image Container */}
+                        <Link
+                            href={`/shop/${product.id}`}
+                            className="relative aspect-[4/3] bg-gray-50 overflow-hidden p-6 block"
+                        >
+                            <div className="absolute top-4 right-4 z-10">
+                                <span className="text-[10px] font-bold tracking-wider uppercase bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-gray-600 shadow-sm border border-gray-100">
+                                    {product.category}
+                                </span>
                             </div>
 
-                            <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
-                                <div>
-                                    <span className="text-xl font-bold text-gray-900">
-                                        ${product.price}
+                            <Image
+                                src={product.image}
+                                alt={product.name}
+                                fill
+                                className="object-contain object-center group-hover:scale-110 transition-transform duration-500 mix-blend-multiply"
+                            />
+                        </Link>
+
+                        {/* Content */}
+                        <div className="p-5 flex flex-col flex-1">
+                            <Link href={`/shop/${product.id}`}>
+                                <h3 className="text-lg font-bold text-gray-900 mb-1 truncate hover:text-gray-600 transition-colors">
+                                    {product.name}
+                                </h3>
+                            </Link>
+
+                            <div className="flex items-center gap-2 mb-4">
+                                <div className="flex text-yellow-400 text-sm">
+                                    ★{" "}
+                                    <span className="text-gray-900 font-semibold ml-1">
+                                        {product.rating}
                                     </span>
-                                    <div className="flex items-center mt-1">
-                                        <span className="text-yellow-400 text-sm mr-1">
-                                            ★
-                                        </span>
-                                        <span className="text-xs text-gray-500">
-                                            {product.rating} ({product.reviews})
-                                        </span>
-                                    </div>
                                 </div>
-                                
-                                <button
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        addToCart(product);
-                                    }}
-                                    className="p-3 bg-gray-900 text-white rounded-full hover:bg-red-600 transition-colors shadow-sm active:scale-95"
-                                    title="Add to Cart"
+                                <span className="text-xs text-gray-400">
+                                    ({product.reviews} Reviews)
+                                </span>
+                            </div>
+
+                            <div className="flex items-end justify-between mb-6">
+                                <span className="text-2xl font-bold text-gray-900">
+                                    ${product.price}
+                                </span>
+                            </div>
+
+                            {/* Actions - Two Buttons */}
+                            <div className="grid grid-cols-2 gap-3 mt-auto">
+                                <Button
+                                    variant="outline"
+                                    className="rounded-full border-gray-200 hover:bg-gray-50 hover:text-black font-medium text-xs sm:text-sm h-10 sm:h-11"
+                                    onClick={() => addToCart(product)}
                                 >
-                                    <ShoppingCart size={20} />
-                                </button>
+                                    Add to Cart
+                                </Button>
+                                <Button className="rounded-full bg-black text-white hover:bg-gray-800 font-medium text-xs sm:text-sm h-10 sm:h-11 shadow-lg shadow-gray-200">
+                                    Buy Now
+                                </Button>
                             </div>
                         </div>
-                    </Link>
+                    </div>
                 ))}
             </div>
         </div>

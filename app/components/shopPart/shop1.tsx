@@ -7,20 +7,18 @@ interface BackgroundImageProps {
 
 const Background = ({ children }: BackgroundImageProps) => {
     return (
-        <section className="relative w-full h-[70vh] flex items-center justify-center overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-start">
-                <div className="relative w-[100vmax] h-[30vmax]">
-                    <Image
-                        src="/images/_.jpeg"
-                        alt="Background"
-                        fill
-                        className="object-cover"
-                        priority
-                    />
-                    <div className="absolute inset-0 bg-black/50" />
-                </div>
+        <section className="relative w-full h-[60vh] md:h-[70vh] flex items-center justify-center overflow-hidden">
+            <div className="absolute inset-0">
+                <Image
+                    src="/images/_.jpeg"
+                    alt="Background"
+                    fill
+                    className="object-cover object-center"
+                    priority
+                />
+                <div className="absolute inset-0 bg-black/50" />
             </div>
-            <div className="relative z-10 container mx-auto px-4 text-center text-white">
+            <div className="relative z-10 container mx-auto px-4 text-center text-white pb-10">
                 {children}
             </div>
         </section>
@@ -30,11 +28,17 @@ const Background = ({ children }: BackgroundImageProps) => {
 const Shop1 = () => {
     return (
         <Background>
-            <div>
-                <span className="text-8xl font-bold">Shop</span>
+            <div className="flex flex-col items-center justify-center select-none">
+                <h1 className="text-[25vw] md:text-[14rem] font-bold leading-none tracking-tighter opacity-100 mix-blend-overlay">
+                    Shop
+                </h1>
+                <p className="text-xl md:text-3xl font-light tracking-widest mt-2 md:-mt-8 opacity-90">
+                    Give All You Need
+                </p>
             </div>
         </Background>
     );
 };
 
 export default Shop1;
+export { Background };

@@ -7,11 +7,23 @@ import {
     SidebarGroupContent,
     SidebarGroupLabel,
     SidebarHeader,
+    useSidebar,
 } from "../../components/ui/sidebar";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 
 const categories = ["Clothing", "Footwear", "Accessories", "Electronics"];
+
+interface SidebarShopProps {
+    selectedCategories: string[];
+    setSelectedCategories: (categories: string[]) => void;
+    minPrice: number;
+    setMinPrice: (price: number) => void;
+    maxPrice: number;
+    setMaxPrice: (price: number) => void;
+    onApplyFilters: (categories: string[], min: number, max: number) => void;
+    onClearFilters: () => void;
+}
 
 const SidebarShop = ({
     selectedCategories,
@@ -22,16 +34,9 @@ const SidebarShop = ({
     setMaxPrice,
     onApplyFilters,
     onClearFilters,
-}: {
-    selectedCategories: string[];
-    setSelectedCategories: (categories: string[]) => void;
-    minPrice: number;
-    setMinPrice: (price: number) => void;
-    maxPrice: number;
-    setMaxPrice: (price: number) => void;
-    onApplyFilters: (categories: string[], min: number, max: number) => void;
-    onClearFilters: () => void;
-}) => {
+}: SidebarShopProps) => {
+    const { isMobile } = useSidebar();
+
     const handleCategoryChange = (category: string, checked: boolean) => {
         const newCategories = checked
             ? [...selectedCategories, category]
@@ -45,9 +50,12 @@ const SidebarShop = ({
     };
 
     return (
-        <Sidebar>
+        <Sidebar
+            collapsible={isMobile ? "offcanvas" : "none"}
+            className="bg-gray-50/50 border-r border-gray-100"
+        >
             <SidebarHeader>
-                <h2 className="text-lg font-semibold">Filters</h2>
+                <h2 className="text-lg font-semibold px-2">Filters</h2>
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
@@ -72,9 +80,14 @@ const SidebarShop = ({
                                             e.target.checked,
                                         )
                                     }
-                                    className="mr-2"
+                                    className="mr-2 accent-black"
                                 />
-                                <label htmlFor={category}>{category}</label>
+                                <label
+                                    htmlFor={category}
+                                    className="text-sm cursor-pointer select-none"
+                                >
+                                    {category}
+                                </label>
                             </div>
                         ))}
                     </SidebarGroupContent>
@@ -83,7 +96,10 @@ const SidebarShop = ({
                     <SidebarGroupLabel>Price Range</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <div className="flex items-center mb-2">
-                            <label htmlFor="minPrice" className="mr-2">
+                            <label
+                                htmlFor="minPrice"
+                                className="mr-2 text-sm w-8"
+                            >
                                 Min:
                             </label>
                             <Input
@@ -94,11 +110,14 @@ const SidebarShop = ({
                                     e: React.ChangeEvent<HTMLInputElement>,
                                 ) => setMinPrice(Number(e.target.value))}
                                 onBlur={handlePriceChange}
-                                className="w-20"
+                                className="h-8 text-sm"
                             />
                         </div>
                         <div className="flex items-center">
-                            <label htmlFor="maxPrice" className="mr-2">
+                            <label
+                                htmlFor="maxPrice"
+                                className="mr-2 text-sm w-8"
+                            >
                                 Max:
                             </label>
                             <Input
@@ -109,14 +128,18 @@ const SidebarShop = ({
                                     e: React.ChangeEvent<HTMLInputElement>,
                                 ) => setMaxPrice(Number(e.target.value))}
                                 onBlur={handlePriceChange}
-                                className="w-20"
+                                className="h-8 text-sm"
                             />
                         </div>
                     </SidebarGroupContent>
                 </SidebarGroup>
                 <SidebarGroup>
                     <SidebarGroupContent>
-                        <Button onClick={onClearFilters} variant="outline">
+                        <Button
+                            onClick={onClearFilters}
+                            variant="outline"
+                            className="w-full"
+                        >
                             Clear Filters
                         </Button>
                     </SidebarGroupContent>

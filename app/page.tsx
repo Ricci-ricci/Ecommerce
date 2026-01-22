@@ -1,7 +1,6 @@
 "use client";
 import BackgroundImage from "./components/BackgroundImage";
 import HeroText from "./components/heroText";
-import FooterPart1 from "./components/mainPart/footer";
 import Part1 from "./components/mainPart/part1";
 import Part2 from "./components/mainPart/part2";
 import Part3 from "./components/mainPart/part3";

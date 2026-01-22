@@ -54,38 +54,31 @@ const Shop2 = () => {
     };
 
     return (
-        <div className="flex flex-col min-h-screen">
-            <div className="flex-1 relative">
-                <style>{`
-                    .shop-sidebar-provider [data-slot="sidebar-container"] {
-                        position: sticky !important;
-                        top: 0 !important;
-                        height: 100vh !important;
-                    }
-                `}</style>
-                <SidebarProvider className="shop-sidebar-provider">
-                    <SidebarShop
-                        selectedCategories={selectedCategories}
-                        setSelectedCategories={setSelectedCategories}
-                        minPrice={minPrice}
-                        setMinPrice={setMinPrice}
-                        maxPrice={maxPrice}
-                        setMaxPrice={setMaxPrice}
-                        onApplyFilters={applyFilters}
-                        onClearFilters={clearFilters}
-                    />
-                    <SidebarInset>
-                        <header className="flex h-16 shrink-0 items-center gap-2 px-4 border-b">
-                            <SidebarTrigger className="-ml-1" />
-                            <div className="flex-1" />
-                        </header>
-                        <div className="flex flex-1 flex-col gap-4 p-4">
-                            <ProductGrid filteredProducts={filteredProducts} />
-                        </div>
-                    </SidebarInset>
-                </SidebarProvider>
-            </div>
-        </div>
+        <SidebarProvider className="w-full h-full min-h-[inherit]">
+            <SidebarShop
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
+                minPrice={minPrice}
+                setMinPrice={setMinPrice}
+                maxPrice={maxPrice}
+                setMaxPrice={setMaxPrice}
+                onApplyFilters={applyFilters}
+                onClearFilters={clearFilters}
+            />
+            <SidebarInset className="bg-transparent overflow-hidden">
+                <header className="flex h-16 shrink-0 items-center gap-2 px-6 border-b border-gray-100 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
+                    <SidebarTrigger className="-ml-1" />
+                    <div className="flex-1 flex items-center justify-between">
+                        <span className="text-sm font-medium text-gray-500">
+                            Showing {filteredProducts.length} results
+                        </span>
+                    </div>
+                </header>
+                <div className="flex flex-1 flex-col gap-4 p-6">
+                    <ProductGrid filteredProducts={filteredProducts} />
+                </div>
+            </SidebarInset>
+        </SidebarProvider>
     );
 };
 

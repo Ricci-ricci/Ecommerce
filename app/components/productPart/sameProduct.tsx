@@ -2,6 +2,7 @@ import Image from "next/image";
 import { GetCategory } from "@/app/data/getData";
 import Container from "@/app/layout/container";
 import Section from "@/app/layout/section";
+import Link from "next/link";
 
 interface ProductType {
     id?: number;
@@ -37,42 +38,45 @@ const SameProduct = ({ product }: { product: ProductType }) => {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {relatedProducts.map((item) => (
-                            <div
+                            <Link
                                 key={item.id}
-                                className="group relative flex flex-col"
+                                href={`/shop/${item.id}`}
+                                className="block group"
                             >
-                                <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden mb-4 border border-gray-200">
-                                    <Image
-                                        src={item.image}
-                                        alt={item.name}
-                                        fill
-                                        className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                                    />
+                                <div className="group relative flex flex-col">
+                                    <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden mb-4 border border-gray-200">
+                                        <Image
+                                            src={item.image}
+                                            alt={item.name}
+                                            fill
+                                            className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                                        />
 
-                                    {/* Overlay / Action Button placeholder similar to other parts */}
-                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
-                                </div>
+                                        {/* Overlay / Action Button placeholder similar to other parts */}
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+                                    </div>
 
-                                <div className="flex flex-col gap-1">
-                                    <h3 className="font-medium text-gray-900 truncate">
-                                        {item.name}
-                                    </h3>
+                                    <div className="flex flex-col gap-1">
+                                        <h3 className="font-medium text-gray-900 truncate">
+                                            {item.name}
+                                        </h3>
 
-                                    <div className="flex items-center justify-between">
-                                        <p className="font-bold text-gray-900">
-                                            ${item.price}
-                                        </p>
-                                        <div className="flex items-center text-sm">
-                                            <span className="text-yellow-500 mr-1">
-                                                ★
-                                            </span>
-                                            <span className="text-gray-600">
-                                                {item.rating}
-                                            </span>
+                                        <div className="flex items-center justify-between">
+                                            <p className="font-bold text-gray-900">
+                                                ${item.price}
+                                            </p>
+                                            <div className="flex items-center text-sm">
+                                                <span className="text-yellow-500 mr-1">
+                                                    ★
+                                                </span>
+                                                <span className="text-gray-600">
+                                                    {item.rating}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </div>
