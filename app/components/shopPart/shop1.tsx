@@ -32,9 +32,6 @@ const Shop1 = () => {
                 <h1 className="text-[25vw] md:text-[14rem] font-bold leading-none tracking-tighter opacity-100 mix-blend-overlay">
                     Shop
                 </h1>
-                <p className="text-xl md:text-3xl font-light tracking-widest mt-2 md:-mt-8 opacity-90">
-                    Give All You Need
-                </p>
             </div>
         </Background>
     );

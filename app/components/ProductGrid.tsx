@@ -46,7 +46,7 @@ const ProductGrid = ({ filteredProducts }: ProductGridProps) => {
                                 src={product.image}
                                 alt={product.name}
                                 fill
-                                className="object-contain object-center group-hover:scale-110 transition-transform duration-500 mix-blend-multiply"
+                                className="object-cover object-center group-hover:scale-110 transition-transform duration-500 mix-blend-multiply"
                             />
                         </Link>
 
