@@ -72,7 +72,7 @@ const CartPage = () => {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl min-h-[80vh] mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <h1 className="text-3xl font-bold text-gray-900 mb-8">
                 Shopping Cart
             </h1>
@@ -85,7 +85,7 @@ const CartPage = () => {
                             key={item.id}
                             className="flex gap-6 p-6 bg-white rounded-xl shadow-sm border border-gray-100"
                         >
-                            <div className="w-24 h-24 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
+                            <div className="w-46 h-46 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
                                 {item.image ? (
                                     <Image
                                         src={item.image}
@@ -103,16 +103,16 @@ const CartPage = () => {
 
                             <div className="flex-1 flex flex-col justify-between">
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900">
+                                    <h3 className="text-xl font-bold text-gray-900">
                                         {item.name}
                                     </h3>
-                                    <p className="text-gray-500 text-sm mt-1">
+                                    <p className="text-gray-500 text-lg mt-1">
                                         {item.description}
                                     </p>
                                 </div>
                                 <div className="flex items-center justify-between mt-4">
                                     <div className="flex items-center gap-3">
-                                        <span className="font-bold text-lg">
+                                        <span className="font-bold text-xl">
                                             ${item.price}
                                         </span>
                                         <span className="text-gray-400">

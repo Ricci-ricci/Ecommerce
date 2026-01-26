@@ -12,11 +12,13 @@ import { products } from "@/app/data/products";
 import Section from "@/app/layout/section";
 import Container from "@/app/layout/container";
 import Link from "next/link";
+import { useGlobal } from "@/app/context/GlobalContext";
 
 // Example data structure for recommendations
 const recommendedProducts = products;
 
 export default function Recommandation() {
+    const { addToCart } = useGlobal();
     return (
         <Section>
             <Container className=" px-4 md:px-6">
@@ -44,9 +46,9 @@ export default function Recommandation() {
                                     key={product.id}
                                     className="md:basis-1/2 lg:basis-1/3"
                                 >
-                                    <Link href={`/shop/${product.id}`}>
-                                        <div className="p-1">
-                                            <div className="flex flex-col gap-4 p-4 border rounded-lg bg-card text-card-foreground shadow-sm">
+                                    <div className="p-1">
+                                        <div className="flex flex-col gap-4 p-4 border rounded-lg bg-card text-card-foreground shadow-sm">
+                                            <Link href={`/shop/${product.id}`}>
                                                 <div className="aspect-square relative overflow-hidden rounded-md">
                                                     <Image
                                                         src={product.image}
@@ -56,20 +58,46 @@ export default function Recommandation() {
                                                         width={500}
                                                     />
                                                 </div>
-                                                <div className="space-y-2">
-                                                    <h3 className="font-semibold text-lg">
-                                                        {product.name}
-                                                    </h3>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        {product.price}
-                                                    </p>
-                                                    <Button className="w-full">
-                                                        Add to Cart
-                                                    </Button>
+                                            </Link>
+
+                                            <div className="flex items-center gap-2">
+                                                <div className="flex text-yellow-400 text-sm">
+                                                    ★{" "}
+                                                    <span className="text-gray-900 font-semibold ml-1">
+                                                        {product.rating}
+                                                    </span>
                                                 </div>
+                                                <span className="text-xs text-gray-400">
+                                                    ({product.reviews} Reviews)
+                                                </span>
+                                            </div>
+
+                                            <div className="flex items-end justify-between mb-2">
+                                                <span className="text-2xl font-bold text-gray-900">
+                                                    ${product.price}
+                                                </span>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-3 mt-auto">
+                                                <Button
+                                                    variant="outline"
+                                                    className="rounded-full border-gray-200 hover:bg-gray-50 hover:text-black font-medium text-xs sm:text-sm h-10 sm:h-11"
+                                                    onClick={() =>
+                                                        addToCart(product)
+                                                    }
+                                                >
+                                                    Add to Cart
+                                                </Button>
+                                                <Link
+                                                    href={`/shop/${product.id}`}
+                                                    className="w-full"
+                                                >
+                                                    <Button className="rounded-full bg-black text-white hover:bg-gray-800 font-medium text-xs sm:text-sm h-10 sm:h-11 shadow-lg shadow-gray-200 w-full">
+                                                        Buy Now
+                                                    </Button>
+                                                </Link>
                                             </div>
                                         </div>
-                                    </Link>
+                                    </div>
                                 </CarouselItem>
                             ))}
                         </CarouselContent>
