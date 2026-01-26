@@ -1,7 +1,10 @@
+"use client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useGlobal } from "@/app/context/GlobalContext";
 
 interface ProductType {
+    id: number;
     image: string;
     name: string;
     category: string;
@@ -12,6 +15,7 @@ interface ProductType {
 }
 
 const Product = ({ product }: { product: ProductType }) => {
+    const { addToCart } = useGlobal();
     return (
         <>
             <div className="container mx-auto px-4 py-12">
@@ -69,6 +73,12 @@ const Product = ({ product }: { product: ProductType }) => {
                             <Button
                                 size="lg"
                                 className="w-full md:w-auto min-w-50"
+                                onClick={() =>
+                                    addToCart({
+                                        ...product,
+                                        price: Number(product.price),
+                                    })
+                                }
                             >
                                 Add to Cart
                             </Button>

@@ -1,3 +1,4 @@
+import Recommandation from "../components/shopPart/recommandation";
 import Shop1 from "../components/shopPart/shop1";
 import Shop2 from "../components/shopPart/shop2";
 import Container from "../layout/container";
@@ -14,6 +15,7 @@ const Shop = () => {
                     </div>
                 </Container>
             </div>
+            <Recommandation></Recommandation>
         </div>
     );
 };

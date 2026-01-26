@@ -1,5 +1,19 @@
 "use client";
 
+import * as React from "react";
+import {
+    ShoppingBag,
+    Shirt,
+    Footprints,
+    Watch,
+    Smartphone,
+    Search,
+    Sparkles,
+    Percent,
+    ChevronDown,
+    X,
+} from "lucide-react";
+
 import {
     Sidebar,
     SidebarContent,
@@ -7,12 +21,31 @@ import {
     SidebarGroupContent,
     SidebarGroupLabel,
     SidebarHeader,
+    SidebarMenu,
+    SidebarMenuItem,
+    SidebarMenuButton,
+    SidebarMenuSub,
+    SidebarMenuSubItem,
+    SidebarMenuSubButton,
+    SidebarMenuBadge,
     useSidebar,
 } from "../../components/ui/sidebar";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 
-const categories = ["Clothing", "Footwear", "Accessories", "Electronics"];
+// Categories reverted to original but with icons
+const mainCategories = [
+    { name: "Clothing", icon: Shirt },
+    { name: "Footwear", icon: Footprints },
+    { name: "Accessories", icon: Watch },
+    { name: "Electronics", icon: Smartphone },
+];
+
+const secondarySections = [
+    { name: "New Arrival", icon: Search },
+    { name: "Best Seller", icon: Sparkles },
+    { name: "On Discount", icon: Percent },
+];
 
 interface SidebarShopProps {
     selectedCategories: string[];
@@ -36,11 +69,18 @@ const SidebarShop = ({
     onClearFilters,
 }: SidebarShopProps) => {
     const { isMobile } = useSidebar();
+    const [isAllProductsOpen, setIsAllProductsOpen] = React.useState(true);
 
-    const handleCategoryChange = (category: string, checked: boolean) => {
-        const newCategories = checked
-            ? [...selectedCategories, category]
-            : selectedCategories.filter((c) => c !== category);
+    const handleCategoryToggle = (category: string) => {
+        // Toggle category selection:
+        // If it's already selected, remove it. If not, add it.
+        const isSelected = selectedCategories.includes(category);
+
+        // is isSelected true then filter it out else add it to the array
+        const newCategories = isSelected
+            ? selectedCategories.filter((c) => c !== category)
+            : [...selectedCategories, category];
+
         setSelectedCategories(newCategories);
         onApplyFilters(newCategories, minPrice, maxPrice);
     };
@@ -54,94 +94,135 @@ const SidebarShop = ({
             collapsible={isMobile ? "offcanvas" : "none"}
             className="bg-gray-50/50 border-r border-gray-100"
         >
-            <SidebarHeader>
-                <h2 className="text-lg font-semibold px-2">Filters</h2>
+            <SidebarHeader className="pt-6 px-4 pb-2">
+                <h2 className="text-xl font-bold text-gray-900">Category</h2>
             </SidebarHeader>
-            <SidebarContent>
+            <SidebarContent className="px-2">
                 <SidebarGroup>
-                    <SidebarGroupLabel>Categories</SidebarGroupLabel>
                     <SidebarGroupContent>
-                        {categories.map((category) => (
-                            <div
-                                key={category}
-                                className="flex items-center mb-2"
-                            >
-                                <input
-                                    type="checkbox"
-                                    id={category}
-                                    checked={selectedCategories.includes(
-                                        category,
-                                    )}
-                                    onChange={(
-                                        e: React.ChangeEvent<HTMLInputElement>,
-                                    ) =>
-                                        handleCategoryChange(
-                                            category,
-                                            e.target.checked,
-                                        )
+                        <SidebarMenu>
+                            {/* Main Collapsible Section */}
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    onClick={() =>
+                                        setIsAllProductsOpen(!isAllProductsOpen)
                                     }
-                                    className="mr-2 accent-black"
-                                />
-                                <label
-                                    htmlFor={category}
-                                    className="text-sm cursor-pointer select-none"
+                                    isActive={true}
+                                    className="font-medium text-gray-700 bg-gray-100 hover:bg-gray-200/80 data-[active=true]:bg-gray-100 data-[active=true]:text-gray-900"
                                 >
-                                    {category}
-                                </label>
+                                    <ShoppingBag className="w-4 h-4" />
+                                    <span>All Product</span>
+                                    <SidebarMenuBadge className="bg-red-500 text-white hover:bg-red-600 font-semibold rounded-md h-5 min-w-5 px-1 flex items-center justify-center">
+                                        32
+                                    </SidebarMenuBadge>
+                                    <ChevronDown
+                                        className={`ml-auto w-4 h-4 transition-transform duration-200 ${
+                                            isAllProductsOpen
+                                                ? ""
+                                                : "-rotate-90"
+                                        }`}
+                                    />
+                                </SidebarMenuButton>
+
+                                {isAllProductsOpen && (
+                                    <SidebarMenuSub>
+                                        {mainCategories.map((item) => {
+                                            const isSelected =
+                                                selectedCategories.includes(
+                                                    item.name,
+                                                );
+                                            return (
+                                                <SidebarMenuSubItem
+                                                    key={item.name}
+                                                >
+                                                    <SidebarMenuSubButton
+                                                        onClick={() =>
+                                                            handleCategoryToggle(
+                                                                item.name,
+                                                            )
+                                                        }
+                                                        isActive={isSelected}
+                                                        className={`cursor-pointer transition-colors ${
+                                                            isSelected
+                                                                ? "text-gray-900 font-semibold bg-gray-100/50"
+                                                                : "text-gray-500 hover:text-gray-900"
+                                                        }`}
+                                                    >
+                                                        <item.icon className="w-4 h-4" />
+                                                        <span>{item.name}</span>
+                                                    </SidebarMenuSubButton>
+                                                </SidebarMenuSubItem>
+                                            );
+                                        })}
+                                    </SidebarMenuSub>
+                                )}
+                            </SidebarMenuItem>
+
+                            {/* Secondary Sections */}
+                            {secondarySections.map((section) => (
+                                <SidebarMenuItem key={section.name}>
+                                    <SidebarMenuButton className="text-gray-500 hover:text-gray-900 mt-1">
+                                        <section.icon className="w-4 h-4" />
+                                        <span>{section.name}</span>
+                                        <ChevronDown className="ml-auto w-4 h-4 opacity-30" />
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+
+                <SidebarGroup className="mt-4">
+                    <SidebarGroupLabel className="text-gray-900 font-semibold text-sm">
+                        Price Range
+                    </SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <div className="space-y-4 pt-2 px-1">
+                            <div className="flex items-center space-x-2">
+                                <div className="relative flex-1">
+                                    <span className="absolute left-2.5 top-1.5 text-xs text-gray-500 font-medium">
+                                        $
+                                    </span>
+                                    <Input
+                                        type="number"
+                                        value={minPrice}
+                                        onChange={(e) =>
+                                            setMinPrice(Number(e.target.value))
+                                        }
+                                        onBlur={handlePriceChange}
+                                        className="pl-6 h-8 text-sm bg-white"
+                                        placeholder="Min"
+                                    />
+                                </div>
+                                <span className="text-gray-400 font-light">
+                                    -
+                                </span>
+                                <div className="relative flex-1">
+                                    <span className="absolute left-2.5 top-1.5 text-xs text-gray-500 font-medium">
+                                        $
+                                    </span>
+                                    <Input
+                                        type="number"
+                                        value={maxPrice}
+                                        onChange={(e) =>
+                                            setMaxPrice(Number(e.target.value))
+                                        }
+                                        onBlur={handlePriceChange}
+                                        className="pl-6 h-8 text-sm bg-white"
+                                        placeholder="Max"
+                                    />
+                                </div>
                             </div>
-                        ))}
-                    </SidebarGroupContent>
-                </SidebarGroup>
-                <SidebarGroup>
-                    <SidebarGroupLabel>Price Range</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <div className="flex items-center mb-2">
-                            <label
-                                htmlFor="minPrice"
-                                className="mr-2 text-sm w-8"
+                            <Button
+                                onClick={onClearFilters}
+                                variant="outline"
+                                size="sm"
+                                className="w-full text-xs h-8 text-gray-600 border-gray-200 hover:bg-gray-100"
                             >
-                                Min:
-                            </label>
-                            <Input
-                                id="minPrice"
-                                type="number"
-                                value={minPrice}
-                                onChange={(
-                                    e: React.ChangeEvent<HTMLInputElement>,
-                                ) => setMinPrice(Number(e.target.value))}
-                                onBlur={handlePriceChange}
-                                className="h-8 text-sm"
-                            />
+                                <X className="w-3 h-3 mr-2" />
+                                Clear Filters
+                            </Button>
                         </div>
-                        <div className="flex items-center">
-                            <label
-                                htmlFor="maxPrice"
-                                className="mr-2 text-sm w-8"
-                            >
-                                Max:
-                            </label>
-                            <Input
-                                id="maxPrice"
-                                type="number"
-                                value={maxPrice}
-                                onChange={(
-                                    e: React.ChangeEvent<HTMLInputElement>,
-                                ) => setMaxPrice(Number(e.target.value))}
-                                onBlur={handlePriceChange}
-                                className="h-8 text-sm"
-                            />
-                        </div>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-                <SidebarGroup>
-                    <SidebarGroupContent>
-                        <Button
-                            onClick={onClearFilters}
-                            variant="outline"
-                            className="w-full"
-                        >
-                            Clear Filters
-                        </Button>
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
