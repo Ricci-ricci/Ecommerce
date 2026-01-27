@@ -1,14 +1,35 @@
+"use client";
 import Image from "next/image";
 import Container from "@/app/layout/container";
 import Section from "@/app/layout/section";
 import { products } from "@/app/data/products";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+
+const trendingItems = products.slice(0, 4);
+const categories = Array.from(new Set(products.map((p) => p.category)));
+
+interface Product {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    image: string;
+    category: string;
+    rating: number;
+    reviews: number;
+}
+
+interface TrendingProductProps {
+    trend: Product[];
+    category: string[];
+}
 
 // Component names must start with a capital letter in React.
 // Previously "trendingProduct" (lowercase) would be treated as an HTML tag, not a React component.
-const TrendingProduct = () => {
+const TrendingProduct = ({ trend, category }: TrendingProductProps) => {
     // Taking the first 4 products to display in the grid
-    const trendingItems = products.slice(0, 4);
 
     return (
         <div className="w-full py-8">
@@ -19,46 +40,33 @@ const TrendingProduct = () => {
                 </h2>
 
                 <div className="flex gap-2 mt-4 md:mt-0">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className="rounded-full px-6"
-                    >
-                        Men
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="rounded-full px-6 text-gray-500"
-                    >
-                        Women
-                    </Button>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="rounded-full px-6 text-gray-500"
-                    >
-                        Kids
-                    </Button>
+                    {category.map((cat) => (
+                        <Button
+                            key={cat}
+                            variant="outline"
+                            size="sm"
+                            className="rounded-full px-6"
+                        >
+                            <span>{cat}</span>
+                        </Button>
+                    ))}
                 </div>
             </div>
 
             {/* Product Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {trendingItems.map((product) => (
+                {trend.map((product) => (
                     <div
                         key={product.id}
                         className="group relative flex flex-col"
                     >
                         <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden mb-4">
                             <div className="absolute top-3 left-3 z-10">
-                                <span className="bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-semibold rounded-full shadow-sm">
-                                    {product.id % 2 === 0
-                                        ? "Best Sellers"
-                                        : "New Arrival"}
+                                <span className="bg-white/90 uppercase backdrop-blur-sm px-3 py-1 text-xs font-semibold rounded-full shadow-sm">
+                                    {product.category}
                                 </span>
                             </div>
-                            <button className="absolute top-3 right-3 z-10 p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white shadow-sm transition-all opacity-0 group-hover:opacity-100">
+                            <button className="absolute cursor-pointer top-3 right-3 z-10 p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white shadow-sm transition-all opacity-0 group-hover:opacity-100">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -76,12 +84,14 @@ const TrendingProduct = () => {
                             </button>
 
                             {/* Product Image */}
-                            <Image
-                                src={product.image}
-                                alt={product.name}
-                                fill
-                                className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                            />
+                            <Link href={`/shop/${product.id}`}>
+                                <Image
+                                    src={product.image}
+                                    alt={product.name}
+                                    fill
+                                    className="cursor-pointer object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                                />
+                            </Link>
                         </div>
 
                         {/* Product Info */}
@@ -93,6 +103,9 @@ const TrendingProduct = () => {
                             </h3>
 
                             <div className="flex items-center justify-between">
+                                <div className="text-sm uppercase font-bold text-gray-900 hover:underline truncate max-w-[140px]">
+                                    {product.name}
+                                </div>
                                 <div className="flex items-baseline gap-2">
                                     <span className="font-bold text-lg">
                                         ${product.price}
@@ -101,24 +114,6 @@ const TrendingProduct = () => {
                                         ${(product.price * 1.2).toFixed(2)}
                                     </span>
                                 </div>
-
-                                <button className="flex items-center text-sm font-medium text-gray-700 hover:text-black transition-colors">
-                                    Quick Shop
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth={1.5}
-                                        stroke="currentColor"
-                                        className="w-4 h-4 ml-1"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
-                                        />
-                                    </svg>
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -129,10 +124,15 @@ const TrendingProduct = () => {
 };
 
 const Part3 = () => {
+    const [filteredProduct, setFilteredProduct] = useState("All");
+    const [displayedProducts, setDisplayedProducts] = useState(products);
+    const applyFilter = () => {
+        return;
+    };
     return (
         <Container>
             <Section>
-                <TrendingProduct />
+                <TrendingProduct trend={trendingItems} category={categories} />
             </Section>
         </Container>
     );
