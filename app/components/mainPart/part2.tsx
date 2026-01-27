@@ -6,7 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 
 const ShowProduct = () => {
+    //get the first product from the products array
     const firstProduct = products[0];
+    //find the second that has a different category than the first
     const secondProduct = products.find(
         (p) => p.category !== firstProduct.category,
     );
