@@ -29,6 +29,7 @@ interface GlobalContextType {
     cart: CartItem[];
     addToCart: (product: Product) => void;
     removeFromCart: (productId: string | number) => void;
+    isInCart: (productId: string | number) => boolean;
     clearCart: () => void;
     user: User | null;
     login: (name: string, email: string) => void;
@@ -94,6 +95,9 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
             return [...prevCart, { ...product, quantity: 1 }];
         });
     };
+    const isInCart = (productId: string | number) => {
+        return cart.some((item) => item.id === productId);
+    };
 
     const removeFromCart = (productId: string | number) => {
         setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
@@ -123,6 +127,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 cart,
                 addToCart,
                 removeFromCart,
+                isInCart,
                 clearCart,
                 user,
                 login,

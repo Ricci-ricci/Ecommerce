@@ -18,7 +18,7 @@ import { useGlobal } from "@/app/context/GlobalContext";
 const recommendedProducts = products;
 
 export default function Recommandation() {
-    const { addToCart } = useGlobal();
+    const { addToCart, isInCart, removeFromCart } = useGlobal();
     return (
         <Section>
             <Container className=" px-4 md:px-6">
@@ -82,10 +82,16 @@ export default function Recommandation() {
                                                     variant="outline"
                                                     className="rounded-full border-gray-200 hover:bg-gray-50 hover:text-black font-medium text-xs sm:text-sm h-10 sm:h-11"
                                                     onClick={() =>
-                                                        addToCart(product)
+                                                        isInCart(product.id)
+                                                            ? removeFromCart(
+                                                                  product.id,
+                                                              )
+                                                            : addToCart(product)
                                                     }
                                                 >
-                                                    Add to Cart
+                                                    {isInCart(product.id)
+                                                        ? "Remove"
+                                                        : "Add to Cart"}
                                                 </Button>
                                                 <Link
                                                     href={`/shop/${product.id}`}

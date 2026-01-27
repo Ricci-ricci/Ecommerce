@@ -21,7 +21,7 @@ interface ProductGridProps {
 }
 
 const ProductGrid = ({ filteredProducts }: ProductGridProps) => {
-    const { addToCart } = useGlobal();
+    const { addToCart, isInCart, removeFromCart } = useGlobal();
 
     return (
         <div className="flex-1">
@@ -81,13 +81,24 @@ const ProductGrid = ({ filteredProducts }: ProductGridProps) => {
                                 <Button
                                     variant="outline"
                                     className="rounded-full border-gray-200 hover:bg-gray-50 hover:text-black font-medium text-xs sm:text-sm h-10 sm:h-11"
-                                    onClick={() => addToCart(product)}
+                                    onClick={() =>
+                                        isInCart(product.id)
+                                            ? removeFromCart(product.id)
+                                            : addToCart(product)
+                                    }
                                 >
-                                    Add to Cart
+                                    {isInCart(product.id)
+                                        ? "Remove"
+                                        : "Add to Cart"}
                                 </Button>
-                                <Button className="rounded-full bg-black text-white hover:bg-gray-800 font-medium text-xs sm:text-sm h-10 sm:h-11 shadow-lg shadow-gray-200">
-                                    Buy Now
-                                </Button>
+                                <Link
+                                    className="w-full"
+                                    href={`/shop/${product.id}`}
+                                >
+                                    <Button className="w-full rounded-full bg-black text-white hover:bg-gray-800 font-medium text-xs sm:text-sm h-10 sm:h-11 shadow-lg shadow-gray-200">
+                                        Buy Now
+                                    </Button>
+                                </Link>
                             </div>
                         </div>
                     </div>
