@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import {
     SidebarInset,
     SidebarProvider,
@@ -22,6 +23,7 @@ interface Product {
 }
 
 const Shop2 = () => {
+    const searchParams = useSearchParams();
     //where we stock everythings
     const [filteredProducts, setFilteredProducts] = useState(products); //here is the product or the filtered product
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]); //here is the category if selected
@@ -29,22 +31,26 @@ const Shop2 = () => {
     const [maxPrice, setMaxPrice] = useState<number>(1000); //here is the max price that is 1000 if selected
 
     //this is a function to apply the filters
-    const applyFilters = (categories: string[], min: number, max: number) => {
-        //after importing the product we filter it and stock it inside filterd variable
-        // filtered has to check if
-        const filtered = products.filter((product: Product) => {
-            //if there s no category selectioned and returned true and return everything categories.lenght===0
-            // or check if it s included inside the categories by categories.includes(product.category);
-            const inCategory =
-                categories.length === 0 ||
-                categories.includes(product.category);
-            //check if it s between the range of price max and min
-            const inPriceRange = product.price >= min && product.price <= max;
-            //and return both
-            return inCategory && inPriceRange;
-        });
-        setFilteredProducts(filtered);
-    };
+    const applyFilters = useCallback(
+        (categories: string[], min: number, max: number) => {
+            //after importing the product we filter it and stock it inside filterd variable
+            // filtered has to check if
+            const filtered = products.filter((product: Product) => {
+                //if there s no category selectioned and returned true and return everything categories.lenght===0
+                // or check if it s included inside the categories by categories.includes(product.category);
+                const inCategory =
+                    categories.length === 0 ||
+                    categories.includes(product.category);
+                //check if it s between the range of price max and min
+                const inPriceRange =
+                    product.price >= min && product.price <= max;
+                //and return both
+                return inCategory && inPriceRange;
+            });
+            setFilteredProducts(filtered);
+        },
+        [],
+    );
 
     const clearFilters = () => {
         setSelectedCategories([]);
@@ -52,6 +58,14 @@ const Shop2 = () => {
         setMaxPrice(1000);
         setFilteredProducts(products);
     };
+
+    useEffect(() => {
+        const category = searchParams.get("category");
+        if (category) {
+            setSelectedCategories([category]);
+            applyFilters([category], minPrice, maxPrice);
+        }
+    }, [searchParams, applyFilters, minPrice, maxPrice]);
 
     return (
         <SidebarProvider className="w-full h-full min-h-[inherit]">

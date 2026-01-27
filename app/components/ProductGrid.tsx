@@ -34,7 +34,7 @@ const ProductGrid = ({ filteredProducts }: ProductGridProps) => {
                         {/* Image Container */}
                         <Link
                             href={`/shop/${product.id}`}
-                            className="relative aspect-[4/3] bg-gray-50 overflow-hidden p-6 block"
+                            className="relative aspect-4/3 bg-gray-50 overflow-hidden p-6 block"
                         >
                             <div className="absolute top-4 right-4 z-10">
                                 <span className="text-[10px] font-bold tracking-wider uppercase bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-gray-600 shadow-sm border border-gray-100">
@@ -75,8 +75,6 @@ const ProductGrid = ({ filteredProducts }: ProductGridProps) => {
                                     ${product.price}
                                 </span>
                             </div>
-
-                            {/* Actions - Two Buttons */}
                             <div className="grid grid-cols-2 gap-3 mt-auto">
                                 <Button
                                     variant="outline"

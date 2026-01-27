@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import Recommandation from "../components/shopPart/recommandation";
 import Shop1 from "../components/shopPart/shop1";
 import Shop2 from "../components/shopPart/shop2";
@@ -12,7 +13,9 @@ const Shop = () => {
             <div className="relative z-20 px-4 -mt-24 md:-mt-32 pb-24">
                 <Container>
                     <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 min-h-[800px]">
-                        <Shop2 />
+                        <Suspense>
+                            <Shop2 />
+                        </Suspense>
                     </div>
                 </Container>
             </div>

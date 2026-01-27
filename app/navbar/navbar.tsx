@@ -8,8 +8,6 @@ import { useState } from "react";
 const MENU = [
     { name: "Home", link: "/" },
     { name: "Shop", link: "/shop" },
-    { name: "About", link: "/about" },
-    { name: "Services", link: "/services" },
     { name: "Contact", link: "/contact" },
 ];
 
@@ -22,7 +20,7 @@ const Navbar = () => {
             <div className="flex items-center justify-between p-4 px-6 md:px-12 max-w-7xl mx-auto">
                 {/* Logo */}
                 <Link href="/">
-                    <span className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-blue-600">
+                    <span className="text-2xl text-black font-extrabold bg-clip-text uppercase">
                         SpiderSense
                     </span>
                 </Link>
@@ -31,7 +29,7 @@ const Navbar = () => {
                 <div className="hidden md:flex items-center gap-8">
                     {MENU.map((item) => (
                         <Link key={item.name} href={item.link}>
-                            <span className="text-gray-700 font-medium hover:text-red-600 transition-colors">
+                            <span className="text-black font-bold hover:text-red-600 transition-colors">
                                 {item.name}
                             </span>
                         </Link>
@@ -51,20 +49,31 @@ const Navbar = () => {
 
                     {user ? (
                         <div className="flex items-center gap-2">
-                            <span className="text-sm font-semibold hidden md:block">{user.name}</span>
-                            <button onClick={logout} className="text-gray-700 hover:text-red-600" title="Logout">
+                            <span className="text-sm font-semibold hidden md:block">
+                                {user.name}
+                            </span>
+                            <button
+                                onClick={logout}
+                                className="text-gray-700 hover:text-red-600"
+                                title="Logout"
+                            >
                                 <LogOut className="w-6 h-6" />
                             </button>
                         </div>
                     ) : (
-                        <Link href="/login" className="flex items-center gap-2 text-gray-700 hover:text-red-600 transition-colors">
+                        <Link
+                            href="/login"
+                            className="flex items-center gap-2 text-gray-700 hover:text-red-600 transition-colors"
+                        >
                             <UserIcon className="w-6 h-6" />
-                            <span className="hidden md:block font-medium">Login</span>
+                            <span className="hidden md:block font-medium">
+                                Login
+                            </span>
                         </Link>
                     )}
 
                     {/* Mobile Menu Button */}
-                    <button 
+                    <button
                         className="md:hidden text-gray-700"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
@@ -77,7 +86,11 @@ const Navbar = () => {
             {isMenuOpen && (
                 <div className="md:hidden bg-white border-t border-gray-100 p-4 flex flex-col gap-4">
                     {MENU.map((item) => (
-                        <Link key={item.name} href={item.link} onClick={() => setIsMenuOpen(false)}>
+                        <Link
+                            key={item.name}
+                            href={item.link}
+                            onClick={() => setIsMenuOpen(false)}
+                        >
                             <span className="block text-gray-700 font-medium hover:text-red-600">
                                 {item.name}
                             </span>

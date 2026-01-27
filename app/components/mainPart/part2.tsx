@@ -3,9 +3,15 @@ import Section from "@/app/layout/section";
 import { products } from "@/app/data/products";
 import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const ShowProduct = () => {
-    const Data = products.slice(0, 2);
+    const firstProduct = products[0];
+    const secondProduct = products.find(
+        (p) => p.category !== firstProduct.category,
+    );
+
+    const Data = [firstProduct, secondProduct || products[1]];
 
     return (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -36,12 +42,14 @@ const ShowProduct = () => {
                     </div>
 
                     <div className="relative z-10 mt-4">
-                        <button className="flex items-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-transform hover:scale-105">
-                            {index === 0 ? "Shop Men's" : "Shop Women's"}
-                            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-black">
-                                <ArrowUpRight className="h-3 w-3" />
-                            </div>
-                        </button>
+                        <Link href={`/shop?category=${item.category}`}>
+                            <button className="flex uppercase font-bold items-center gap-2 rounded-full bg-black px-6 py-3 text-sm text-white transition-transform hover:scale-105">
+                                Shop {item.category}
+                                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-black">
+                                    <ArrowUpRight className="h-3 w-3" />
+                                </div>
+                            </button>
+                        </Link>
                     </div>
                 </div>
             ))}
