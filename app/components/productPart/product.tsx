@@ -30,11 +30,9 @@ const Product = ({ product }: { product: ProductType }) => {
                             priority
                         />
                     </div>
-
-                    {/* Details Section */}
-                    <div className="flex flex-col justify-center">
+                    <div className="flex flex-col items-start justify-start">
                         <div className="mb-6">
-                            <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-2">
+                            <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-2">
                                 {product.name}
                             </h1>
                             <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800">

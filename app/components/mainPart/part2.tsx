@@ -17,41 +17,42 @@ const ShowProduct = () => {
 
     return (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {Data.map((item, index) => (
+            {Data.map((item) => (
                 <div
                     key={item.id}
-                    className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-slate-50 p-8 min-h-[400px]"
+                    className="group relative flex min-h-140 flex-col justify-between overflow-hidden rounded-2xl p-8"
                 >
-                    <div className="relative z-10">
-                        <h2 className="mb-2 text-3xl font-bold text-gray-900">
-                            {index === 0
-                                ? "Step Into His World"
-                                : "Walk Her Way"}
-                        </h2>
-                        <p className="max-w-xs text-sm text-gray-500">
-                            {item.description.substring(0, 60)}...
-                        </p>
-                    </div>
-
-                    <div className="flex flex-1 items-center justify-center py-8">
+                    <div className="absolute inset-0 z-0">
                         <Image
                             src={item.image}
                             alt={item.name}
-                            className="h-auto w-full max-w-70 object-contain mix-blend-multiply"
-                            width={280}
-                            height={280}
+                            fill
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            sizes="(max-width: 768px) 100vw, 50vw"
                         />
+                        <div className="absolute inset-0 bg-black/40" />
                     </div>
 
-                    <div className="relative z-10 mt-4">
-                        <Link href={`/shop?category=${item.category}`}>
-                            <button className="flex uppercase font-bold items-center gap-2 rounded-full bg-black px-6 py-3 text-sm text-white transition-transform hover:scale-105">
-                                Shop {item.category}
-                                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-black">
-                                    <ArrowUpRight className="h-3 w-3" />
-                                </div>
-                            </button>
-                        </Link>
+                    <div className="relative z-10 flex h-full flex-col justify-between">
+                        <div>
+                            <h2 className="mb-2 text-3xl font-bold text-white">
+                                {item.name}
+                            </h2>
+                            <p className="max-w-xs text-sm text-gray-200">
+                                {item.description.substring(0, 60)}...
+                            </p>
+                        </div>
+
+                        <div className="mt-4">
+                            <Link href={`/shop?category=${item.category}`}>
+                                <button className="flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold uppercase text-black transition-transform hover:scale-105">
+                                    Shop {item.category}
+                                    <div className="flex h-5 w-5 items-center justify-center rounded-full bg-black text-white">
+                                        <ArrowUpRight className="h-3 w-3" />
+                                    </div>
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             ))}
