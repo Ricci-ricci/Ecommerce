@@ -29,9 +29,12 @@ const Content = () => {
     return (
         <div className="mt-16 grid grid-cols-1 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-12">
             {Data.map((item, index) => (
-                <div key={index} className="flex items-center gap-6">
-                    <div className="flex flex-none items-center justify-center rounded-full bg-gray-50 p-6">
-                        <item.icon className="h-10 w-10 text-gray-900" />
+                <div
+                    key={index}
+                    className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left sm:gap-6"
+                >
+                    <div className="flex flex-none items-center justify-center rounded-full bg-gray-50 p-4 sm:p-6">
+                        <item.icon className="h-8 w-8 text-gray-900 sm:h-10 sm:w-10" />
                     </div>
                     <div>
                         <h3 className="text-xl font-bold text-gray-900">
@@ -52,7 +55,7 @@ const Part1 = () => {
     return (
         <Container>
             <Section>
-                <div className="items-center justify-center flex text-6xl font-bold ">
+                <div className="flex items-center justify-center text-center text-3xl font-bold md:text-6xl">
                     {text}
                 </div>
                 <Content></Content>
