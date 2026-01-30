@@ -1,19 +1,24 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useGlobal } from "../context/GlobalContext";
 import { Button } from "@/components/ui/button";
 
 interface Product {
-    id: number;
-    name: string;
+    id: string;
+    title: string;
     description: string;
     price: number;
-    image: string;
-    category: string;
-    rating: number;
-    reviews: number;
+    images: string[];
+    stock: number;
+    published: boolean;
+    categoryId: string;
+    createdAt: string;
+    updatedAt: string;
+    category: {
+        id: string;
+        name: string;
+    };
 }
 
 interface ProductGridProps {
@@ -38,15 +43,14 @@ const ProductGrid = ({ filteredProducts }: ProductGridProps) => {
                         >
                             <div className="absolute top-4 right-4 z-10">
                                 <span className="text-[10px] font-bold tracking-wider uppercase bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-gray-600 shadow-sm border border-gray-100">
-                                    {product.category}
+                                    {product.category.name}
                                 </span>
                             </div>
 
-                            <Image
-                                src={product.image}
-                                alt={product.name}
-                                fill
-                                className="object-cover object-center group-hover:scale-110 transition-transform duration-500 mix-blend-multiply"
+                            <img
+                                src={product.images[0]}
+                                alt={product.title}
+                                className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 mix-blend-multiply"
                             />
                         </Link>
 
@@ -54,21 +58,9 @@ const ProductGrid = ({ filteredProducts }: ProductGridProps) => {
                         <div className="p-5 flex flex-col flex-1">
                             <Link href={`/shop/${product.id}`}>
                                 <h3 className="text-lg font-bold text-gray-900 mb-1 truncate hover:text-gray-600 transition-colors">
-                                    {product.name}
+                                    {product.title}
                                 </h3>
                             </Link>
-
-                            <div className="flex items-center gap-2 mb-4">
-                                <div className="flex text-yellow-400 text-sm">
-                                    ★{" "}
-                                    <span className="text-gray-900 font-semibold ml-1">
-                                        {product.rating}
-                                    </span>
-                                </div>
-                                <span className="text-xs text-gray-400">
-                                    ({product.reviews} Reviews)
-                                </span>
-                            </div>
 
                             <div className="flex items-end justify-between mb-6">
                                 <span className="text-2xl font-bold text-gray-900">

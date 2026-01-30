@@ -9,11 +9,15 @@ import React, {
 } from "react";
 
 export interface Product {
-    id: string | number;
-    name: string;
+    id: string;
+    title: string;
     price: number;
-    image: string;
+    images: string[];
     description?: string;
+    category?: {
+        id: string;
+        name: string;
+    };
 }
 
 export interface CartItem extends Product {

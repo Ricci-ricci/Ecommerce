@@ -12,7 +12,6 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 const CartPage = () => {
     const { cart, removeFromCart, addToCart, clearCart, cartTotal, user } =
@@ -86,13 +85,11 @@ const CartPage = () => {
                             className="flex gap-6 p-6 bg-white rounded-xl shadow-sm border border-gray-100"
                         >
                             <div className="w-46 h-46 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
-                                {item.image ? (
-                                    <Image
-                                        src={item.image}
-                                        alt={item.name}
+                                {item.images && item.images[0] ? (
+                                    <img
+                                        src={item.images[0]}
+                                        alt={item.title}
                                         className="w-full h-full object-cover"
-                                        height={500}
-                                        width={500}
                                     />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -104,7 +101,7 @@ const CartPage = () => {
                             <div className="flex-1 flex flex-col justify-between">
                                 <div>
                                     <h3 className="text-xl font-bold text-gray-900">
-                                        {item.name}
+                                        {item.title}
                                     </h3>
                                     <p className="text-gray-500 text-lg mt-1">
                                         {item.description}

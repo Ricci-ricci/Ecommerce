@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import {
     Carousel,
@@ -7,18 +8,35 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { products } from "@/app/data/products";
+
+import useRealProducts from "@/app/data/fetchProduct";
 import Section from "@/app/layout/section";
 import Container from "@/app/layout/container";
 import Link from "next/link";
 import { useGlobal } from "@/app/context/GlobalContext";
 
-// Example data structure for recommendations
-const recommendedProducts = products;
+interface Product {
+    id: string;
+    title: string;
+    description: string;
+    price: number;
+    images: string[];
+    stock: number;
+    published: boolean;
+    categoryId: string;
+    createdAt: string;
+    updatedAt: string;
+    category: {
+        id: string;
+        name: string;
+    };
+}
 
 export default function Recommandation() {
+    const { products, loading, error } = useRealProducts();
     const { addToCart, isInCart, removeFromCart } = useGlobal();
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
     return (
         <Section>
             <Container className=" px-4 md:px-6">
@@ -41,7 +59,7 @@ export default function Recommandation() {
                         className="w-full"
                     >
                         <CarouselContent>
-                            {recommendedProducts.map((product) => (
+                            {products.map((product) => (
                                 <CarouselItem
                                     key={product.id}
                                     className="md:basis-1/2 lg:basis-1/3"
@@ -50,27 +68,13 @@ export default function Recommandation() {
                                         <div className="flex flex-col gap-4 p-4 border rounded-lg bg-card text-card-foreground shadow-sm">
                                             <Link href={`/shop/${product.id}`}>
                                                 <div className="aspect-square relative overflow-hidden rounded-md">
-                                                    <Image
-                                                        src={product.image}
-                                                        alt={product.name}
+                                                    <img
+                                                        src={product.images[0]}
+                                                        alt={product.title}
                                                         className="object-cover w-full h-full transition-transform hover:scale-105"
-                                                        height={500}
-                                                        width={500}
                                                     />
                                                 </div>
                                             </Link>
-
-                                            <div className="flex items-center gap-2">
-                                                <div className="flex text-yellow-400 text-sm">
-                                                    ★{" "}
-                                                    <span className="text-gray-900 font-semibold ml-1">
-                                                        {product.rating}
-                                                    </span>
-                                                </div>
-                                                <span className="text-xs text-gray-400">
-                                                    ({product.reviews} Reviews)
-                                                </span>
-                                            </div>
 
                                             <div className="flex items-end justify-between mb-2">
                                                 <span className="text-2xl font-bold text-gray-900">

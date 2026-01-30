@@ -9,23 +9,30 @@ import {
 } from "../../../components/ui/sidebar";
 import SidebarShop from "../sidebarShop";
 import ProductGrid from "../ProductGrid";
-import { products } from "../../data/products";
+import useRealProducts from "../../data/fetchProduct";
 
 interface Product {
-    id: number;
-    name: string;
+    id: string;
+    title: string;
     description: string;
     price: number;
-    image: string;
-    category: string;
-    rating: number;
-    reviews: number;
+    images: string[];
+    stock: number;
+    published: boolean;
+    categoryId: string;
+    createdAt: string;
+    updatedAt: string;
+    category: {
+        id: string;
+        name: string;
+    };
 }
 
 const Shop2 = () => {
     const searchParams = useSearchParams();
     //where we stock everythings
-    const [filteredProducts, setFilteredProducts] = useState(products); //here is the product or the filtered product
+    const { products, loading, error } = useRealProducts();
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); //here is the product or the filtered product
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]); //here is the category if selected
     const [minPrice, setMinPrice] = useState<number>(0); //here is the min price that is 0
     const [maxPrice, setMaxPrice] = useState<number>(1000); //here is the max price that is 1000 if selected
@@ -37,10 +44,10 @@ const Shop2 = () => {
             // filtered has to check if
             const filtered = products.filter((product: Product) => {
                 //if there s no category selectioned and returned true and return everything categories.lenght===0
-                // or check if it s included inside the categories by categories.includes(product.category);
+                // or check if it s included inside the categories by categories.includes(product.category.name);
                 const inCategory =
                     categories.length === 0 ||
-                    categories.includes(product.category);
+                    categories.includes(product.category.name);
                 //check if it s between the range of price max and min
                 const inPriceRange =
                     product.price >= min && product.price <= max;
@@ -49,7 +56,7 @@ const Shop2 = () => {
             });
             setFilteredProducts(filtered);
         },
-        [],
+        [products],
     );
 
     const clearFilters = () => {
@@ -58,6 +65,9 @@ const Shop2 = () => {
         setMaxPrice(1000);
         setFilteredProducts(products);
     };
+    useEffect(() => {
+        setFilteredProducts(products);
+    }, [products]);
 
     useEffect(() => {
         const category = searchParams.get("category");
@@ -66,6 +76,9 @@ const Shop2 = () => {
             applyFilters([category], minPrice, maxPrice);
         }
     }, [searchParams, applyFilters, minPrice, maxPrice]);
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <SidebarProvider className="w-full h-full min-h-[inherit]">

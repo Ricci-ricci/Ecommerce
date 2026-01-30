@@ -1,33 +1,35 @@
 "use client";
-import Image from "next/image";
+
 import Container from "@/app/layout/container";
 import Section from "@/app/layout/section";
-import { products } from "@/app/data/products";
+
+import useRealProducts from "@/app/data/fetchProduct";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-const trendingItems = products.slice(0, 4);
-const categories = [
-    "All",
-    ...Array.from(new Set(products.map((p) => p.category))),
-];
-
 interface Product {
-    id: number;
-    name: string;
+    id: string;
+    title: string;
     description: string;
     price: number;
-    image: string;
-    category: string;
-    rating: number;
-    reviews: number;
+    images: string[];
+    stock: number;
+    published: boolean;
+    categoryId: string;
+    createdAt: string;
+    updatedAt: string;
+    category: {
+        id: string;
+        name: string;
+    };
 }
 
 interface TrendingProductProps {
     trend: Product[];
     category: string[];
     onCategorySelect: (category: string) => void;
+    loading?: boolean;
 }
 
 // Component names must start with a capital letter in React.
@@ -37,8 +39,6 @@ const TrendingProduct = ({
     category,
     onCategorySelect,
 }: TrendingProductProps) => {
-    // Taking the first 4 products to display in the grid
-
     return (
         <div className="w-full py-8">
             {/* Header Section */}
@@ -72,7 +72,7 @@ const TrendingProduct = ({
                         <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden mb-4">
                             <div className="absolute top-3 left-3 z-10">
                                 <span className="bg-white/90 uppercase backdrop-blur-sm px-3 py-1 text-xs font-semibold rounded-full shadow-sm">
-                                    {product.category}
+                                    {product.category.name}
                                 </span>
                             </div>
                             <button className="absolute cursor-pointer top-3 right-3 z-10 p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white shadow-sm transition-all opacity-0 group-hover:opacity-100">
@@ -94,11 +94,10 @@ const TrendingProduct = ({
 
                             {/* Product Image */}
                             <Link href={`/shop/${product.id}`}>
-                                <Image
-                                    src={product.image}
-                                    alt={product.name}
-                                    fill
-                                    className="cursor-pointer object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                                <img
+                                    src={product.images[0]}
+                                    alt={product.title}
+                                    className="cursor-pointer object-cover object-center group-hover:scale-105 transition-transform duration-500 w-full h-full"
                                 />
                             </Link>
                         </div>
@@ -108,12 +107,12 @@ const TrendingProduct = ({
                             {/* We can hide title or show it small based on the design,
                                 but accessible naming is important */}
                             <h3 className="font-medium text-gray-900 truncate sr-only">
-                                {product.name}
+                                {product.title}
                             </h3>
 
                             <div className="flex items-center justify-between">
                                 <div className="text-sm uppercase font-bold text-gray-900 hover:underline truncate max-w-[140px]">
-                                    {product.name}
+                                    {product.title}
                                 </div>
                                 <div className="flex items-baseline gap-2">
                                     <span className="font-bold text-lg">
@@ -133,18 +132,35 @@ const TrendingProduct = ({
 };
 
 const Part3 = () => {
+    const { products, loading, error } = useRealProducts();
+
+    // Taking the first 4 products to display in the grid
+    useEffect(() => {
+        console.log("Fetched Products:", products);
+    }, [products]);
+    const categories = [
+        "All",
+        ...Array.from(new Set(products.map((p) => p.category.name))),
+    ];
     const [filteredProduct, setFilteredProduct] = useState("All");
-    const [displayedProducts, setDisplayedProducts] = useState(products);
+    const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
     const applyFilter = (category: string) => {
         setFilteredProduct(category);
         if (category === "All") {
             setDisplayedProducts(products);
         } else {
-            const filtered = products.filter((p) => p.category === category);
+            const filtered = products.filter(
+                (p) => p.category.name === category,
+            );
             setDisplayedProducts(filtered);
         }
         return;
     };
+    useEffect(() => {
+        setDisplayedProducts(products);
+    }, [products]);
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
     return (
         <Container>
             <Section>
@@ -152,6 +168,7 @@ const Part3 = () => {
                     trend={displayedProducts.slice(0, 4)}
                     category={categories}
                     onCategorySelect={applyFilter}
+                    loading={loading}
                 />
             </Section>
         </Container>
