@@ -7,25 +7,10 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-interface Product {
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    images: string[];
-    stock: number;
-    published: boolean;
-    categoryId: string;
-    createdAt: string;
-    updatedAt: string;
-    category: {
-        id: string;
-        name: string;
-    };
-}
+import { RealProduct } from "@/app/data/fetchProduct";
 
 interface TrendingProductProps {
-    trend: Product[];
+    trend: RealProduct[];
     category: string[];
     onCategorySelect: (category: string) => void;
 }
@@ -72,7 +57,7 @@ const TrendingProduct = ({
                         <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden mb-4">
                             <div className="absolute top-3 left-3 z-10">
                                 <span className="bg-white/90 uppercase backdrop-blur-sm px-3 py-1 text-xs font-semibold rounded-full shadow-sm">
-                                    {product.category.name}
+                                    {product.categoryName}
                                 </span>
                             </div>
                             <button className="absolute cursor-pointer top-3 right-3 z-10 p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white shadow-sm transition-all opacity-0 group-hover:opacity-100">
@@ -95,7 +80,7 @@ const TrendingProduct = ({
                             {/* Product Image */}
                             <Link href={`/shop/${product.id}`}>
                                 <img
-                                    src={product.images[0]}
+                                    src={product.image}
                                     alt={product.title}
                                     className="cursor-pointer object-cover object-center group-hover:scale-105 transition-transform duration-500 w-full h-full"
                                 />
@@ -132,20 +117,22 @@ const TrendingProduct = ({
 };
 
 const Part3 = () => {
-    const { products, loading, error } = useRealProducts();
+    const { data: products, loading, error } = useRealProducts();
     const categories = [
         "All",
-        ...Array.from(new Set(products.map((p) => p.category.name))),
+        ...Array.from(new Set(products.map((p) => p.categoryName))),
     ];
     const [filteredProduct, setFilteredProduct] = useState("All");
-    const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
+    const [displayedProducts, setDisplayedProducts] = useState<RealProduct[]>(
+        [],
+    );
     const applyFilter = (category: string) => {
         setFilteredProduct(category);
         if (category === "All") {
             setDisplayedProducts(products);
         } else {
             const filtered = products.filter(
-                (p) => p.category.name === category,
+                (p) => p.categoryName === category,
             );
             setDisplayedProducts(filtered);
         }

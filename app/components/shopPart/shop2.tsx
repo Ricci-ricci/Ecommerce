@@ -16,22 +16,20 @@ interface Product {
     title: string;
     description: string;
     price: number;
-    images: string[];
     stock: number;
     published: boolean;
+    image: string;
+    features: string[];
+    categoryName: string;
     categoryId: string;
     createdAt: string;
     updatedAt: string;
-    category: {
-        id: string;
-        name: string;
-    };
 }
 
 const Shop2 = () => {
     const searchParams = useSearchParams();
     //where we stock everythings
-    const { products, loading, error } = useRealProducts();
+    const { data, loading, error } = useRealProducts();
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); //here is the product or the filtered product
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]); //here is the category if selected
     const [minPrice, setMinPrice] = useState<number>(0); //here is the min price that is 0
@@ -42,12 +40,12 @@ const Shop2 = () => {
         (categories: string[], min: number, max: number) => {
             //after importing the product we filter it and stock it inside filterd variable
             // filtered has to check if
-            const filtered = products.filter((product: Product) => {
+            const filtered = data.filter((product: Product) => {
                 //if there s no category selectioned and returned true and return everything categories.lenght===0
                 // or check if it s included inside the categories by categories.includes(product.category.name);
                 const inCategory =
                     categories.length === 0 ||
-                    categories.includes(product.category.name);
+                    categories.includes(product.categoryName);
                 //check if it s between the range of price max and min
                 const inPriceRange =
                     product.price >= min && product.price <= max;
@@ -56,18 +54,18 @@ const Shop2 = () => {
             });
             setFilteredProducts(filtered);
         },
-        [products],
+        [data],
     );
 
     const clearFilters = () => {
         setSelectedCategories([]);
         setMinPrice(0);
         setMaxPrice(1000);
-        setFilteredProducts(products);
+        setFilteredProducts(data);
     };
     useEffect(() => {
-        setFilteredProducts(products);
-    }, [products]);
+        setFilteredProducts(data);
+    }, [data]);
 
     useEffect(() => {
         const category = searchParams.get("category");

@@ -1,24 +1,24 @@
 "use client";
 import { useEffect, useState } from "react";
-// types.ts
 export interface RealProduct {
     id: string;
     title: string;
     description: string;
     price: number;
-    images: string[];
     stock: number;
     published: boolean;
+    image: string;
+    features: string[];
+    categoryName: string;
     categoryId: string;
     createdAt: string;
     updatedAt: string;
-    category: {
-        id: string;
-        name: string;
-    };
 }
 const useRealProducts = () => {
-    const [products, setProducts] = useState<RealProduct[]>([]);
+    const [response, setResponse] = useState<{
+        success: boolean;
+        data: RealProduct[];
+    }>({ success: false, data: [] });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const fetchProduct = async () => {
@@ -33,7 +33,7 @@ const useRealProducts = () => {
             }
             const data = await response.json();
             console.log("Fetched data:", data);
-            setProducts(data.data);
+            setResponse({ success: true, data: data.data });
         } catch (error: unknown) {
             console.error("Fetch error:", error);
             setError(
@@ -46,6 +46,6 @@ const useRealProducts = () => {
     useEffect(() => {
         fetchProduct();
     }, []);
-    return { products, loading, error };
+    return { success: response.success, data: response.data, loading, error };
 };
 export default useRealProducts;

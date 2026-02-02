@@ -2,24 +2,9 @@
 import { Button } from "@/components/ui/button";
 import { useGlobal } from "@/app/context/GlobalContext";
 
-interface ProductType {
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    images: string[];
-    stock: number;
-    published: boolean;
-    categoryId: string;
-    createdAt: string;
-    updatedAt: string;
-    category: {
-        id: string;
-        name: string;
-    };
-}
+import { RealProduct } from "@/app/data/fetchProduct";
 
-const Product = ({ product }: { product: ProductType }) => {
+const Product = ({ product }: { product: RealProduct }) => {
     const { addToCart } = useGlobal();
     return (
         <>
@@ -28,7 +13,7 @@ const Product = ({ product }: { product: ProductType }) => {
                     {/* Image Section */}
                     <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100 border border-gray-200">
                         <img
-                            src={product.images[0]}
+                            src={product.image}
                             alt={product.title}
                             className="object-cover object-center w-full h-full"
                         />
@@ -39,7 +24,7 @@ const Product = ({ product }: { product: ProductType }) => {
                                 {product.title}
                             </h1>
                             <span className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-800">
-                                {product.category.name}
+                                {product.categoryName}
                             </span>
                         </div>
 

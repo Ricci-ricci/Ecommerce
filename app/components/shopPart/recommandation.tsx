@@ -14,26 +14,10 @@ import Section from "@/app/layout/section";
 import Container from "@/app/layout/container";
 import Link from "next/link";
 import { useGlobal } from "@/app/context/GlobalContext";
-
-interface Product {
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    images: string[];
-    stock: number;
-    published: boolean;
-    categoryId: string;
-    createdAt: string;
-    updatedAt: string;
-    category: {
-        id: string;
-        name: string;
-    };
-}
+import { RealProduct } from "@/app/data/fetchProduct";
 
 export default function Recommandation() {
-    const { products, loading, error } = useRealProducts();
+    const { data: products, loading, error } = useRealProducts();
     const { addToCart, isInCart, removeFromCart } = useGlobal();
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -69,7 +53,7 @@ export default function Recommandation() {
                                             <Link href={`/shop/${product.id}`}>
                                                 <div className="aspect-square relative overflow-hidden rounded-md">
                                                     <img
-                                                        src={product.images[0]}
+                                                        src={product.image}
                                                         alt={product.title}
                                                         className="object-cover w-full h-full transition-transform hover:scale-105"
                                                     />

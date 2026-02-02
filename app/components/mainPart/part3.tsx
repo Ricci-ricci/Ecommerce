@@ -7,26 +7,12 @@ import useRealProducts from "@/app/data/fetchProduct";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
-interface Product {
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    images: string[];
-    stock: number;
-    published: boolean;
-    categoryId: string;
-    createdAt: string;
-    updatedAt: string;
-    category: {
-        id: string;
-        name: string;
-    };
-}
+import { RealProduct } from "@/app/data/fetchProduct";
 
 interface TrendingProductProps {
-    trend: Product[];
+    trend: RealProduct[];
     category: string[];
     onCategorySelect: (category: string) => void;
     loading?: boolean;
@@ -38,6 +24,7 @@ const TrendingProduct = ({
     trend,
     category,
     onCategorySelect,
+    loading,
 }: TrendingProductProps) => {
     return (
         <div className="w-full py-8">
@@ -72,7 +59,7 @@ const TrendingProduct = ({
                         <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden mb-4">
                             <div className="absolute top-3 left-3 z-10">
                                 <span className="bg-white/90 uppercase backdrop-blur-sm px-3 py-1 text-xs font-semibold rounded-full shadow-sm">
-                                    {product.category.name}
+                                    {product.categoryName}
                                 </span>
                             </div>
                             <button className="absolute cursor-pointer top-3 right-3 z-10 p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white shadow-sm transition-all opacity-0 group-hover:opacity-100">
@@ -91,15 +78,19 @@ const TrendingProduct = ({
                                     />
                                 </svg>
                             </button>
-
-                            {/* Product Image */}
-                            <Link href={`/shop/${product.id}`}>
-                                <img
-                                    src={product.images[0]}
-                                    alt={product.title}
-                                    className="cursor-pointer object-cover object-center group-hover:scale-105 transition-transform duration-500 w-full h-full"
-                                />
-                            </Link>
+                            {loading ? (
+                                <Skeleton className="flex items-center justify-center w-full h-full">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                                </Skeleton>
+                            ) : (
+                                <Link href={`/products/${product.id}`}>
+                                    <img
+                                        src={product.image}
+                                        alt={product.title}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                                    />
+                                </Link>
+                            )}
                         </div>
 
                         {/* Product Info */}
@@ -132,7 +123,7 @@ const TrendingProduct = ({
 };
 
 const Part3 = () => {
-    const { products, loading, error } = useRealProducts();
+    const { data: products, loading, error } = useRealProducts();
 
     // Taking the first 4 products to display in the grid
     useEffect(() => {
@@ -140,17 +131,19 @@ const Part3 = () => {
     }, [products]);
     const categories = [
         "All",
-        ...Array.from(new Set(products.map((p) => p.category.name))),
+        ...Array.from(new Set(products.map((p) => p.categoryName))),
     ];
     const [filteredProduct, setFilteredProduct] = useState("All");
-    const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
+    const [displayedProducts, setDisplayedProducts] = useState<RealProduct[]>(
+        [],
+    );
     const applyFilter = (category: string) => {
         setFilteredProduct(category);
         if (category === "All") {
             setDisplayedProducts(products);
         } else {
             const filtered = products.filter(
-                (p) => p.category.name === category,
+                (p) => p.categoryName === category,
             );
             setDisplayedProducts(filtered);
         }

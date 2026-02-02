@@ -3,23 +3,7 @@ import Product from "@/app/components/productPart/product";
 import Container from "@/app/layout/container";
 import Section from "@/app/layout/section";
 import SameProduct from "@/app/components/productPart/sameProduct";
-
-interface RealProduct {
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    images: string[];
-    stock: number;
-    published: boolean;
-    categoryId: string;
-    createdAt: string;
-    updatedAt: string;
-    category: {
-        id: string;
-        name: string;
-    };
-}
+import { RealProduct } from "@/app/data/fetchProduct";
 
 export default async function Page({
     params,

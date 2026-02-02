@@ -12,12 +12,15 @@ export interface Product {
     id: string;
     title: string;
     price: number;
-    images: string[];
+    image: string;
     description?: string;
-    category?: {
-        id: string;
-        name: string;
-    };
+    categoryName?: string;
+    features?: string[];
+    stock?: number;
+    published?: boolean;
+    categoryId?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface CartItem extends Product {

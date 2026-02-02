@@ -85,9 +85,9 @@ const CartPage = () => {
                             className="flex gap-6 p-6 bg-white rounded-xl shadow-sm border border-gray-100"
                         >
                             <div className="w-46 h-46 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
-                                {item.images && item.images[0] ? (
+                                {item.image ? (
                                     <img
-                                        src={item.images[0]}
+                                        src={item.image}
                                         alt={item.title}
                                         className="w-full h-full object-cover"
                                     />

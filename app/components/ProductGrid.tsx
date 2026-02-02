@@ -9,16 +9,14 @@ interface Product {
     title: string;
     description: string;
     price: number;
-    images: string[];
+    image: string;
     stock: number;
     published: boolean;
+    features: string[];
+    categoryName: string;
     categoryId: string;
     createdAt: string;
     updatedAt: string;
-    category: {
-        id: string;
-        name: string;
-    };
 }
 
 interface ProductGridProps {
@@ -43,12 +41,12 @@ const ProductGrid = ({ filteredProducts }: ProductGridProps) => {
                         >
                             <div className="absolute top-4 right-4 z-10">
                                 <span className="text-[10px] font-bold tracking-wider uppercase bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-gray-600 shadow-sm border border-gray-100">
-                                    {product.category.name}
+                                    {product.categoryName}
                                 </span>
                             </div>
 
                             <img
-                                src={product.images[0]}
+                                src={product.image}
                                 alt={product.title}
                                 className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 mix-blend-multiply"
                             />

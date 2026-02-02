@@ -3,32 +3,16 @@ import useRealProducts from "@/app/data/fetchProduct";
 import Container from "@/app/layout/container";
 import Section from "@/app/layout/section";
 import Link from "next/link";
+import { RealProduct } from "@/app/data/fetchProduct";
 
-interface ProductType {
-    id?: string;
-    images: string[];
-    title: string;
-    category: {
-        id: string;
-        name: string;
-    };
-    price: number;
-    stock: number;
-    published: boolean;
-    categoryId: string;
-    createdAt: string;
-    updatedAt: string;
-    description: string;
-}
-
-const SameProduct = ({ product }: { product: ProductType }) => {
-    const { products, loading, error } = useRealProducts();
+const SameProduct = ({ product }: { product: RealProduct }) => {
+    const { data: products, loading, error } = useRealProducts();
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
     // Get all products in the category
     const productByCategory = products.filter(
-        (item) => item.category.name === product.category.name,
+        (item) => item.categoryName === product.categoryName,
     );
 
     // Filter out the current product (by title or id if available) and take up to 4 items
@@ -58,7 +42,7 @@ const SameProduct = ({ product }: { product: ProductType }) => {
                                 <div className="group relative flex flex-col">
                                     <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden mb-4 border border-gray-200">
                                         <img
-                                            src={item.images[0]}
+                                            src={item.image}
                                             alt={item.title}
                                             className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                                         />

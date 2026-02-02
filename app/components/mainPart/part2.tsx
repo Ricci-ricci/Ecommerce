@@ -7,30 +7,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-interface Product {
-    id: string;
-    title: string;
-    description: string;
-    price: number;
-    images: string[];
-    stock: number;
-    published: boolean;
-    categoryId: string;
-    createdAt: string;
-    updatedAt: string;
-    category: {
-        id: string;
-        name: string;
-    };
-}
+import { RealProduct } from "@/app/data/fetchProduct";
 
-const ShowProduct = ({ products }: { products: Product[] }) => {
+const ShowProduct = ({ products }: { products: RealProduct[] }) => {
     if (products.length === 0) return <div>No products available</div>;
     //get the first product from the products array
     const firstProduct = products[0];
     //find the second that has a different category than the first
     const secondProduct = products.find(
-        (p) => p.category.name !== firstProduct.category.name,
+        (p) => p.categoryName !== firstProduct.categoryName,
     );
 
     const Data = [firstProduct, secondProduct || products[1]];
@@ -44,7 +29,7 @@ const ShowProduct = ({ products }: { products: Product[] }) => {
                 >
                     <div className="absolute inset-0 z-0">
                         <img
-                            src={item.images[0]}
+                            src={item.image}
                             alt={item.title}
                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
@@ -62,9 +47,9 @@ const ShowProduct = ({ products }: { products: Product[] }) => {
                         </div>
 
                         <div className="mt-4">
-                            <Link href={`/shop?category=${item.category.name}`}>
+                            <Link href={`/shop?category=${item.categoryName}`}>
                                 <button className="flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold uppercase text-black transition-transform hover:scale-105">
-                                    Shop {item.category.name}
+                                    Shop {item.categoryName}
                                     <div className="flex h-5 w-5 items-center justify-center rounded-full bg-black text-white">
                                         <ArrowUpRight className="h-3 w-3" />
                                     </div>
@@ -79,7 +64,7 @@ const ShowProduct = ({ products }: { products: Product[] }) => {
 };
 
 const Part2 = () => {
-    const { products, loading, error } = useRealProducts();
+    const { data: products, loading, error } = useRealProducts();
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
     return (
