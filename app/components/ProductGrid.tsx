@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useGlobal } from "../context/GlobalContext";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
 
 interface Product {
     id: string;
@@ -21,15 +23,44 @@ interface Product {
 
 interface ProductGridProps {
     filteredProducts: Product[];
+    currentPage: number;
+    setCurrentPage: (page: number) => void;
+    itemsPerPage: number;
 }
 
-const ProductGrid = ({ filteredProducts }: ProductGridProps) => {
+const ProductGrid = ({
+    filteredProducts,
+    currentPage,
+    setCurrentPage,
+    itemsPerPage,
+}: ProductGridProps) => {
     const { addToCart, isInCart, removeFromCart } = useGlobal();
+    const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentItems = filteredProducts.slice(startIndex, endIndex);
 
     return (
         <div className="flex-1">
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+                <div className="flex justify-center mb-6">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                        (page) => (
+                            <button
+                                key={page}
+                                onClick={() => setCurrentPage(page)}
+                                className={`mx-1 px-3 py-1 rounded ${currentPage === page ? "bg-black text-white" : "bg-gray-200"}`}
+                            >
+                                {page}
+                            </button>
+                        ),
+                    )}
+                </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                {filteredProducts.map((product) => (
+                {currentItems.map((product) => (
                     <div
                         key={product.id}
                         className="group flex flex-col bg-white rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100"
@@ -45,10 +76,18 @@ const ProductGrid = ({ filteredProducts }: ProductGridProps) => {
                                 </span>
                             </div>
 
+                            {!loadedImages.has(product.id) && (
+                                <Skeleton className="absolute inset-0 w-full h-full" />
+                            )}
                             <img
                                 src={product.image}
                                 alt={product.title}
                                 className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 mix-blend-multiply"
+                                onLoad={() =>
+                                    setLoadedImages((prev) =>
+                                        new Set(prev).add(product.id),
+                                    )
+                                }
                             />
                         </Link>
 

@@ -1,21 +1,28 @@
 "use client";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useGlobal } from "@/app/context/GlobalContext";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { RealProduct } from "@/app/data/fetchProduct";
 
 const Product = ({ product }: { product: RealProduct }) => {
     const { addToCart } = useGlobal();
+    const [imageLoaded, setImageLoaded] = useState(false);
     return (
         <>
             <div className="container mx-auto px-4 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                     {/* Image Section */}
                     <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-gray-100 border border-gray-200">
+                        {!imageLoaded && (
+                            <Skeleton className="absolute inset-0 w-full h-full" />
+                        )}
                         <img
                             src={product.image}
                             alt={product.title}
                             className="object-cover object-center w-full h-full"
+                            onLoad={() => setImageLoaded(true)}
                         />
                     </div>
                     <div className="flex flex-col items-start justify-start">

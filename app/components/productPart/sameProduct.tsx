@@ -4,9 +4,12 @@ import Container from "@/app/layout/container";
 import Section from "@/app/layout/section";
 import Link from "next/link";
 import { RealProduct } from "@/app/data/fetchProduct";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
 
 const SameProduct = ({ product }: { product: RealProduct }) => {
     const { data: products, loading, error } = useRealProducts();
+    const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
@@ -41,10 +44,18 @@ const SameProduct = ({ product }: { product: RealProduct }) => {
                             >
                                 <div className="group relative flex flex-col">
                                     <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden mb-4 border border-gray-200">
+                                        {!loadedImages.has(item.id) && (
+                                            <Skeleton className="absolute inset-0 w-full h-full" />
+                                        )}
                                         <img
                                             src={item.image}
                                             alt={item.title}
                                             className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                                            onLoad={() =>
+                                                setLoadedImages((prev) =>
+                                                    new Set(prev).add(item.id),
+                                                )
+                                            }
                                         />
 
                                         {/* Overlay / Action Button placeholder similar to other parts */}

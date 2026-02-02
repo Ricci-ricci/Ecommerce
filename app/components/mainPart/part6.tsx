@@ -6,6 +6,7 @@ import useRealProducts from "@/app/data/fetchProduct";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { RealProduct } from "@/app/data/fetchProduct";
 
@@ -22,6 +23,7 @@ const TrendingProduct = ({
     category,
     onCategorySelect,
 }: TrendingProductProps) => {
+    const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
     // Taking the first 4 products to display in the grid
 
     return (
@@ -79,10 +81,18 @@ const TrendingProduct = ({
 
                             {/* Product Image */}
                             <Link href={`/shop/${product.id}`}>
+                                {!loadedImages.has(product.id) && (
+                                    <Skeleton className="absolute inset-0 w-full h-full" />
+                                )}
                                 <img
                                     src={product.image}
                                     alt={product.title}
                                     className="cursor-pointer object-cover object-center group-hover:scale-105 transition-transform duration-500 w-full h-full"
+                                    onLoad={() =>
+                                        setLoadedImages((prev) =>
+                                            new Set(prev).add(product.id),
+                                        )
+                                    }
                                 />
                             </Link>
                         </div>

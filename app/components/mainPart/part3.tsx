@@ -26,6 +26,7 @@ const TrendingProduct = ({
     onCategorySelect,
     loading,
 }: TrendingProductProps) => {
+    const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
     return (
         <div className="w-full py-8">
             {/* Header Section */}
@@ -84,10 +85,18 @@ const TrendingProduct = ({
                                 </Skeleton>
                             ) : (
                                 <Link href={`/products/${product.id}`}>
+                                    {!loadedImages.has(product.id) && (
+                                        <Skeleton className="absolute inset-0 w-full h-full" />
+                                    )}
                                     <img
                                         src={product.image}
                                         alt={product.title}
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                                        onLoad={() =>
+                                            setLoadedImages((prev) =>
+                                                new Set(prev).add(product.id),
+                                            )
+                                        }
                                     />
                                 </Link>
                             )}

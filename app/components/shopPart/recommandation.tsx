@@ -15,10 +15,13 @@ import Container from "@/app/layout/container";
 import Link from "next/link";
 import { useGlobal } from "@/app/context/GlobalContext";
 import { RealProduct } from "@/app/data/fetchProduct";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
 
 export default function Recommandation() {
     const { data: products, loading, error } = useRealProducts();
     const { addToCart, isInCart, removeFromCart } = useGlobal();
+    const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
     return (
@@ -52,10 +55,25 @@ export default function Recommandation() {
                                         <div className="flex flex-col gap-4 p-4 border rounded-lg bg-card text-card-foreground shadow-sm">
                                             <Link href={`/shop/${product.id}`}>
                                                 <div className="aspect-square relative overflow-hidden rounded-md">
+                                                    {!loadedImages.has(
+                                                        product.id,
+                                                    ) && (
+                                                        <Skeleton className="absolute inset-0 w-full h-full" />
+                                                    )}
                                                     <img
                                                         src={product.image}
                                                         alt={product.title}
                                                         className="object-cover w-full h-full transition-transform hover:scale-105"
+                                                        onLoad={() =>
+                                                            setLoadedImages(
+                                                                (prev) =>
+                                                                    new Set(
+                                                                        prev,
+                                                                    ).add(
+                                                                        product.id,
+                                                                    ),
+                                                            )
+                                                        }
                                                     />
                                                 </div>
                                             </Link>

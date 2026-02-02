@@ -32,7 +32,8 @@ import {
 } from "../../components/ui/sidebar";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
-
+import { useEffect } from "react";
+import useRealProducts from "../data/fetchProduct";
 // Categories reverted to original but with icons
 const mainCategories = [
     { name: "Clothing", icon: Shirt },
@@ -68,6 +69,16 @@ const SidebarShop = ({
     onApplyFilters,
     onClearFilters,
 }: SidebarShopProps) => {
+    const { data: products, loading, error } = useRealProducts();
+
+    // Taking the first 4 products to display in the grid
+    useEffect(() => {
+        console.log("Fetched Products:", products);
+    }, [products]);
+    const categories = [
+        "All",
+        ...Array.from(new Set(products.map((p) => p.categoryName))),
+    ];
     const { isMobile } = useSidebar();
     const [isAllProductsOpen, setIsAllProductsOpen] = React.useState(true);
 
@@ -126,19 +137,17 @@ const SidebarShop = ({
 
                                 {isAllProductsOpen && (
                                     <SidebarMenuSub>
-                                        {mainCategories.map((item) => {
+                                        {categories.map((item, index) => {
                                             const isSelected =
                                                 selectedCategories.includes(
-                                                    item.name,
+                                                    item,
                                                 );
                                             return (
-                                                <SidebarMenuSubItem
-                                                    key={item.name}
-                                                >
+                                                <SidebarMenuSubItem key={index}>
                                                     <SidebarMenuSubButton
                                                         onClick={() =>
                                                             handleCategoryToggle(
-                                                                item.name,
+                                                                item,
                                                             )
                                                         }
                                                         isActive={isSelected}
@@ -148,8 +157,7 @@ const SidebarShop = ({
                                                                 : "text-gray-500 hover:text-gray-900"
                                                         }`}
                                                     >
-                                                        <item.icon className="w-4 h-4" />
-                                                        <span>{item.name}</span>
+                                                        <span>{item}</span>
                                                     </SidebarMenuSubButton>
                                                 </SidebarMenuSubItem>
                                             );

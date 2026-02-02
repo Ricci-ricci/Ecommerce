@@ -6,10 +6,12 @@ import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { RealProduct } from "@/app/data/fetchProduct";
 
 const ShowProduct = ({ products }: { products: RealProduct[] }) => {
+    const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
     if (products.length === 0) return <div>No products available</div>;
     //get the first product from the products array
     const firstProduct = products[0];
@@ -28,10 +30,18 @@ const ShowProduct = ({ products }: { products: RealProduct[] }) => {
                     className="group relative flex min-h-140 flex-col justify-between overflow-hidden rounded-2xl p-8"
                 >
                     <div className="absolute inset-0 z-0">
+                        {!loadedImages.has(item.id) && (
+                            <Skeleton className="absolute inset-0 w-full h-full" />
+                        )}
                         <img
                             src={item.image}
                             alt={item.title}
                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            onLoad={() =>
+                                setLoadedImages((prev) =>
+                                    new Set(prev).add(item.id),
+                                )
+                            }
                         />
                         <div className="absolute inset-0 bg-black/40" />
                     </div>

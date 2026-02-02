@@ -12,12 +12,14 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const CartPage = () => {
     const { cart, removeFromCart, addToCart, clearCart, cartTotal, user } =
         useGlobal();
     const [isCheckingOut, setIsCheckingOut] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
     const router = useRouter();
 
     const handleCheckout = () => {
@@ -86,11 +88,21 @@ const CartPage = () => {
                         >
                             <div className="w-46 h-46 bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
                                 {item.image ? (
-                                    <img
-                                        src={item.image}
-                                        alt={item.title}
-                                        className="w-full h-full object-cover"
-                                    />
+                                    <>
+                                        {!loadedImages.has(item.id) && (
+                                            <Skeleton className="absolute inset-0 w-full h-full" />
+                                        )}
+                                        <img
+                                            src={item.image}
+                                            alt={item.title}
+                                            className="w-full h-full object-cover"
+                                            onLoad={() =>
+                                                setLoadedImages((prev) =>
+                                                    new Set(prev).add(item.id),
+                                                )
+                                            }
+                                        />
+                                    </>
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-400">
                                         No Img

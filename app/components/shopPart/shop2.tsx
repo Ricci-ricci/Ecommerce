@@ -34,6 +34,8 @@ const Shop2 = () => {
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]); //here is the category if selected
     const [minPrice, setMinPrice] = useState<number>(0); //here is the min price that is 0
     const [maxPrice, setMaxPrice] = useState<number>(1000); //here is the max price that is 1000 if selected
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 20;
 
     //this is a function to apply the filters
     const applyFilters = useCallback(
@@ -53,6 +55,7 @@ const Shop2 = () => {
                 return inCategory && inPriceRange;
             });
             setFilteredProducts(filtered);
+            setCurrentPage(1); // Reset to first page when filters change
         },
         [data],
     );
@@ -62,9 +65,11 @@ const Shop2 = () => {
         setMinPrice(0);
         setMaxPrice(1000);
         setFilteredProducts(data);
+        setCurrentPage(1);
     };
     useEffect(() => {
         setFilteredProducts(data);
+        setCurrentPage(1);
     }, [data]);
 
     useEffect(() => {
@@ -73,6 +78,7 @@ const Shop2 = () => {
             setSelectedCategories([category]);
             applyFilters([category], minPrice, maxPrice);
         }
+        setCurrentPage(1);
     }, [searchParams, applyFilters, minPrice, maxPrice]);
 
     if (loading) return <div>Loading...</div>;
@@ -95,12 +101,22 @@ const Shop2 = () => {
                     <SidebarTrigger className="-ml-1" />
                     <div className="flex-1 flex items-center justify-between">
                         <span className="text-sm font-medium text-gray-500">
-                            Showing {filteredProducts.length} results
+                            Showing {(currentPage - 1) * itemsPerPage + 1}-
+                            {Math.min(
+                                currentPage * itemsPerPage,
+                                filteredProducts.length,
+                            )}{" "}
+                            of {filteredProducts.length} results
                         </span>
                     </div>
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-6">
-                    <ProductGrid filteredProducts={filteredProducts} />
+                    <ProductGrid
+                        filteredProducts={filteredProducts}
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        itemsPerPage={itemsPerPage}
+                    />
                 </div>
             </SidebarInset>
         </SidebarProvider>
