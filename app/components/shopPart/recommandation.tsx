@@ -22,8 +22,29 @@ export default function Recommandation() {
     const { data: products, loading, error } = useRealProducts();
     const { addToCart, isInCart, removeFromCart } = useGlobal();
     const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
-    if (loading) return <div>Loading...</div>;
+
     if (error) return <div>Error: {error}</div>;
+
+    // Show skeleton products when loading
+    const skeletonProducts = Array(6)
+        .fill(null)
+        .map((_, i) => ({
+            id: `skeleton-${i}`,
+            title: "",
+            description: "",
+            price: 0,
+            image: "",
+            stock: 0,
+            published: true,
+            features: [],
+            categoryName: "Loading",
+            categoryId: "",
+            createdAt: "",
+            updatedAt: "",
+        }));
+
+    const productsToDisplay = loading ? skeletonProducts : products;
+
     return (
         <Section>
             <Container className=" px-4 md:px-6">
@@ -46,7 +67,7 @@ export default function Recommandation() {
                         className="w-full"
                     >
                         <CarouselContent>
-                            {products.map((product) => (
+                            {productsToDisplay.map((product) => (
                                 <CarouselItem
                                     key={product.id}
                                     className="md:basis-1/2 lg:basis-1/3"
@@ -55,26 +76,40 @@ export default function Recommandation() {
                                         <div className="flex flex-col gap-4 p-4 border rounded-lg bg-card text-card-foreground shadow-sm">
                                             <Link href={`/shop/${product.id}`}>
                                                 <div className="aspect-square relative overflow-hidden rounded-md">
-                                                    {!loadedImages.has(
-                                                        product.id,
-                                                    ) && (
-                                                        <Skeleton className="absolute inset-0 w-full h-full" />
+                                                    {loading ? (
+                                                        <Skeleton className="flex items-center justify-center w-full h-full">
+                                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                                                        </Skeleton>
+                                                    ) : (
+                                                        <>
+                                                            {!loadedImages.has(
+                                                                product.id,
+                                                            ) && (
+                                                                <Skeleton className="absolute inset-0 w-full h-full" />
+                                                            )}
+                                                            <img
+                                                                src={
+                                                                    product.image
+                                                                }
+                                                                alt={
+                                                                    product.title
+                                                                }
+                                                                className="object-cover w-full h-full transition-transform hover:scale-105"
+                                                                onLoad={() =>
+                                                                    setLoadedImages(
+                                                                        (
+                                                                            prev,
+                                                                        ) =>
+                                                                            new Set(
+                                                                                prev,
+                                                                            ).add(
+                                                                                product.id,
+                                                                            ),
+                                                                    )
+                                                                }
+                                                            />
+                                                        </>
                                                     )}
-                                                    <img
-                                                        src={product.image}
-                                                        alt={product.title}
-                                                        className="object-cover w-full h-full transition-transform hover:scale-105"
-                                                        onLoad={() =>
-                                                            setLoadedImages(
-                                                                (prev) =>
-                                                                    new Set(
-                                                                        prev,
-                                                                    ).add(
-                                                                        product.id,
-                                                                    ),
-                                                            )
-                                                        }
-                                                    />
                                                 </div>
                                             </Link>
 

@@ -14,6 +14,7 @@ interface TrendingProductProps {
     trend: RealProduct[];
     category: string[];
     onCategorySelect: (category: string) => void;
+    loading?: boolean;
 }
 
 // Component names must start with a capital letter in React.
@@ -22,6 +23,7 @@ const TrendingProduct = ({
     trend,
     category,
     onCategorySelect,
+    loading,
 }: TrendingProductProps) => {
     const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
     // Taking the first 4 products to display in the grid
@@ -80,21 +82,27 @@ const TrendingProduct = ({
                             </button>
 
                             {/* Product Image */}
-                            <Link href={`/shop/${product.id}`}>
-                                {!loadedImages.has(product.id) && (
-                                    <Skeleton className="absolute inset-0 w-full h-full" />
-                                )}
-                                <img
-                                    src={product.image}
-                                    alt={product.title}
-                                    className="cursor-pointer object-cover object-center group-hover:scale-105 transition-transform duration-500 w-full h-full"
-                                    onLoad={() =>
-                                        setLoadedImages((prev) =>
-                                            new Set(prev).add(product.id),
-                                        )
-                                    }
-                                />
-                            </Link>
+                            {loading ? (
+                                <Skeleton className="flex items-center justify-center w-full h-full">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                                </Skeleton>
+                            ) : (
+                                <Link href={`/shop/${product.id}`}>
+                                    {!loadedImages.has(product.id) && (
+                                        <Skeleton className="absolute inset-0 w-full h-full" />
+                                    )}
+                                    <img
+                                        src={product.image}
+                                        alt={product.title}
+                                        className="cursor-pointer object-cover object-center group-hover:scale-105 transition-transform duration-500 w-full h-full"
+                                        onLoad={() =>
+                                            setLoadedImages((prev) =>
+                                                new Set(prev).add(product.id),
+                                            )
+                                        }
+                                    />
+                                </Link>
+                            )}
                         </div>
 
                         {/* Product Info */}
@@ -151,15 +159,37 @@ const Part3 = () => {
     useEffect(() => {
         setDisplayedProducts(products);
     }, [products]);
-    if (loading) return <div>Loading...</div>;
+
     if (error) return <div>Error: {error}</div>;
+
+    // Show skeleton products when loading
+    const productsToDisplay = loading
+        ? Array(4)
+              .fill(null)
+              .map((_, i) => ({
+                  id: `skeleton-${i}`,
+                  title: "",
+                  description: "",
+                  price: 0,
+                  image: "",
+                  stock: 0,
+                  published: true,
+                  features: [],
+                  categoryName: "Loading",
+                  categoryId: "",
+                  createdAt: "",
+                  updatedAt: "",
+              }))
+        : displayedProducts.slice(0, 4);
+
     return (
         <Container>
             <Section>
                 <TrendingProduct
-                    trend={displayedProducts.slice(0, 4)}
+                    trend={productsToDisplay}
                     category={categories}
                     onCategorySelect={applyFilter}
+                    loading={loading}
                 />
             </Section>
         </Container>

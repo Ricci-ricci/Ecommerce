@@ -10,8 +10,26 @@ import { useState } from "react";
 const SameProduct = ({ product }: { product: RealProduct }) => {
     const { data: products, loading, error } = useRealProducts();
     const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
-    if (loading) return <div>Loading...</div>;
+
     if (error) return <div>Error: {error}</div>;
+
+    // Show skeleton products when loading
+    const skeletonProducts = Array(4)
+        .fill(null)
+        .map((_, i) => ({
+            id: `skeleton-${i}`,
+            title: "",
+            description: "",
+            price: 0,
+            image: "",
+            stock: 0,
+            published: true,
+            features: [],
+            categoryName: "Loading",
+            categoryId: "",
+            createdAt: "",
+            updatedAt: "",
+        }));
 
     // Get all products in the category
     const productByCategory = products.filter(
@@ -19,11 +37,13 @@ const SameProduct = ({ product }: { product: RealProduct }) => {
     );
 
     // Filter out the current product (by title or id if available) and take up to 4 items
-    const relatedProducts = productByCategory
-        .filter((item) => item.title !== product.title)
-        .slice(0, 4);
+    const relatedProducts = loading
+        ? skeletonProducts
+        : productByCategory
+              .filter((item) => item.title !== product.title)
+              .slice(0, 4);
 
-    if (relatedProducts.length === 0) {
+    if (!loading && relatedProducts.length === 0) {
         return null;
     }
 
@@ -44,22 +64,33 @@ const SameProduct = ({ product }: { product: RealProduct }) => {
                             >
                                 <div className="group relative flex flex-col">
                                     <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden mb-4 border border-gray-200">
-                                        {!loadedImages.has(item.id) && (
-                                            <Skeleton className="absolute inset-0 w-full h-full" />
-                                        )}
-                                        <img
-                                            src={item.image}
-                                            alt={item.title}
-                                            className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                                            onLoad={() =>
-                                                setLoadedImages((prev) =>
-                                                    new Set(prev).add(item.id),
-                                                )
-                                            }
-                                        />
+                                        {loading ? (
+                                            <Skeleton className="flex items-center justify-center w-full h-full">
+                                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                                            </Skeleton>
+                                        ) : (
+                                            <>
+                                                {!loadedImages.has(item.id) && (
+                                                    <Skeleton className="absolute inset-0 w-full h-full" />
+                                                )}
+                                                <img
+                                                    src={item.image}
+                                                    alt={item.title}
+                                                    className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                                                    onLoad={() =>
+                                                        setLoadedImages(
+                                                            (prev) =>
+                                                                new Set(
+                                                                    prev,
+                                                                ).add(item.id),
+                                                        )
+                                                    }
+                                                />
 
-                                        {/* Overlay / Action Button placeholder similar to other parts */}
-                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+                                                {/* Overlay / Action Button placeholder similar to other parts */}
+                                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+                                            </>
+                                        )}
                                     </div>
 
                                     <div className="flex flex-col gap-1">

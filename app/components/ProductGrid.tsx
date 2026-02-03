@@ -26,6 +26,7 @@ interface ProductGridProps {
     currentPage: number;
     setCurrentPage: (page: number) => void;
     itemsPerPage: number;
+    loading: boolean;
 }
 
 const ProductGrid = ({
@@ -33,13 +34,40 @@ const ProductGrid = ({
     currentPage,
     setCurrentPage,
     itemsPerPage,
+    loading,
 }: ProductGridProps) => {
     const { addToCart, isInCart, removeFromCart } = useGlobal();
     const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+    //create a number to see the total page that should exist if the item is 40 and itemsPerPage is 9
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    //current index is where we are -1 cause the index start at 0
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
+    //we only get the items to be shown with slice
     const currentItems = filteredProducts.slice(startIndex, endIndex);
+    // Show skeleton products when loading - use itemsPerPage as fallback if no products yet
+    const skeletonCount =
+        filteredProducts.length > 0
+            ? Math.min(itemsPerPage, filteredProducts.length)
+            : itemsPerPage;
+    const productsToDisplay = loading
+        ? Array(skeletonCount)
+              .fill(null)
+              .map((_, i) => ({
+                  id: `skeleton-${i}`,
+                  title: "",
+                  description: "",
+                  price: 0,
+                  image: "",
+                  stock: 0,
+                  published: true,
+                  features: [],
+                  categoryName: "Loading",
+                  categoryId: "",
+                  createdAt: "",
+                  updatedAt: "",
+              }))
+        : currentItems;
 
     return (
         <div className="flex-1">
@@ -60,36 +88,41 @@ const ProductGrid = ({
                 </div>
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                {currentItems.map((product) => (
+                {productsToDisplay.map((product) => (
                     <div
                         key={product.id}
                         className="group flex flex-col bg-white rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100"
                     >
                         {/* Image Container */}
-                        <Link
-                            href={`/shop/${product.id}`}
-                            className="relative aspect-4/3 bg-gray-50 overflow-hidden p-6 block"
-                        >
+                        <div className="relative aspect-4/3 bg-gray-50 overflow-hidden p-6 block">
                             <div className="absolute top-4 right-4 z-10">
                                 <span className="text-[10px] font-bold tracking-wider uppercase bg-white/80 backdrop-blur-sm px-3 py-1 rounded-full text-gray-600 shadow-sm border border-gray-100">
                                     {product.categoryName}
                                 </span>
                             </div>
 
-                            {!loadedImages.has(product.id) && (
-                                <Skeleton className="absolute inset-0 w-full h-full" />
+                            {loading ? (
+                                <Skeleton className="flex items-center justify-center w-full h-full">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                                </Skeleton>
+                            ) : (
+                                <Link href={`/shop/${product.id}`}>
+                                    {!loadedImages.has(product.id) && (
+                                        <Skeleton className="absolute inset-0 w-full h-full" />
+                                    )}
+                                    <img
+                                        src={product.image}
+                                        alt={product.title}
+                                        className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 mix-blend-multiply"
+                                        onLoad={() =>
+                                            setLoadedImages((prev) =>
+                                                new Set(prev).add(product.id),
+                                            )
+                                        }
+                                    />
+                                </Link>
                             )}
-                            <img
-                                src={product.image}
-                                alt={product.title}
-                                className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500 mix-blend-multiply"
-                                onLoad={() =>
-                                    setLoadedImages((prev) =>
-                                        new Set(prev).add(product.id),
-                                    )
-                                }
-                            />
-                        </Link>
+                        </div>
 
                         {/* Content */}
                         <div className="p-5 flex flex-col flex-1">

@@ -81,7 +81,6 @@ const Shop2 = () => {
         setCurrentPage(1);
     }, [searchParams, applyFilters, minPrice, maxPrice]);
 
-    if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
     return (
@@ -116,6 +115,7 @@ const Shop2 = () => {
                         currentPage={currentPage}
                         setCurrentPage={setCurrentPage}
                         itemsPerPage={itemsPerPage}
+                        loading={loading}
                     />
                 </div>
             </SidebarInset>

@@ -10,17 +10,43 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { RealProduct } from "@/app/data/fetchProduct";
 
-const ShowProduct = ({ products }: { products: RealProduct[] }) => {
+const ShowProduct = ({
+    products,
+    loading,
+}: {
+    products: RealProduct[];
+    loading: boolean;
+}) => {
     const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
-    if (products.length === 0) return <div>No products available</div>;
-    //get the first product from the products array
-    const firstProduct = products[0];
-    //find the second that has a different category than the first
-    const secondProduct = products.find(
-        (p) => p.categoryName !== firstProduct.categoryName,
-    );
 
-    const Data = [firstProduct, secondProduct || products[1]];
+    // Show skeleton products when loading
+    const skeletonProducts = Array(2)
+        .fill(null)
+        .map((_, i) => ({
+            id: `skeleton-${i}`,
+            title: "Loading",
+            description: "Loading product description...",
+            price: 0,
+            image: "",
+            stock: 0,
+            published: true,
+            features: [],
+            categoryName: "Loading",
+            categoryId: "",
+            createdAt: "",
+            updatedAt: "",
+        }));
+
+    const Data = loading
+        ? skeletonProducts
+        : (() => {
+              if (products.length === 0) return skeletonProducts;
+              const firstProduct = products[0];
+              const secondProduct = products.find(
+                  (p) => p.categoryName !== firstProduct.categoryName,
+              );
+              return [firstProduct, secondProduct || products[1]];
+          })();
 
     return (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -30,20 +56,24 @@ const ShowProduct = ({ products }: { products: RealProduct[] }) => {
                     className="group relative flex min-h-140 flex-col justify-between overflow-hidden rounded-2xl p-8"
                 >
                     <div className="absolute inset-0 z-0">
-                        {!loadedImages.has(item.id) && (
+                        {(loading || !loadedImages.has(item.id)) && (
                             <Skeleton className="absolute inset-0 w-full h-full" />
                         )}
-                        <img
-                            src={item.image}
-                            alt={item.title}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                            onLoad={() =>
-                                setLoadedImages((prev) =>
-                                    new Set(prev).add(item.id),
-                                )
-                            }
-                        />
-                        <div className="absolute inset-0 bg-black/40" />
+                        {!loading && (
+                            <>
+                                <img
+                                    src={item.image}
+                                    alt={item.title}
+                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    onLoad={() =>
+                                        setLoadedImages((prev) =>
+                                            new Set(prev).add(item.id),
+                                        )
+                                    }
+                                />
+                                <div className="absolute inset-0 bg-black/40" />
+                            </>
+                        )}
                     </div>
 
                     <div className="relative z-10 flex h-full flex-col justify-between">
@@ -75,12 +105,11 @@ const ShowProduct = ({ products }: { products: RealProduct[] }) => {
 
 const Part2 = () => {
     const { data: products, loading, error } = useRealProducts();
-    if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
     return (
         <Container>
             <Section>
-                <ShowProduct products={products} />
+                <ShowProduct products={products} loading={loading} />
             </Section>
         </Container>
     );

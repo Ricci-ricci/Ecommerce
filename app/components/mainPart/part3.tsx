@@ -161,13 +161,34 @@ const Part3 = () => {
     useEffect(() => {
         setDisplayedProducts(products);
     }, [products]);
-    if (loading) return <div>Loading...</div>;
+
     if (error) return <div>Error: {error}</div>;
+
+    // Show skeleton products when loading
+    const productsToDisplay = loading
+        ? Array(4)
+              .fill(null)
+              .map((_, i) => ({
+                  id: `skeleton-${i}`,
+                  title: "",
+                  description: "",
+                  price: 0,
+                  image: "",
+                  stock: 0,
+                  published: true,
+                  features: [],
+                  categoryName: "Loading",
+                  categoryId: "",
+                  createdAt: "",
+                  updatedAt: "",
+              }))
+        : displayedProducts.slice(0, 4);
+
     return (
         <Container>
             <Section>
                 <TrendingProduct
-                    trend={displayedProducts.slice(0, 4)}
+                    trend={productsToDisplay}
                     category={categories}
                     onCategorySelect={applyFilter}
                     loading={loading}
