@@ -43,31 +43,59 @@ const SocialButton = ({
 };
 
 const LoginPage = () => {
-    const { login } = useGlobal();
     const router = useRouter();
+    const { login } = useGlobal();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const isValid = useMemo(() => {
         return email.trim().length > 0 && password.length >= 6;
     }, [email, password]);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!isValid || isLoading) return;
 
         setIsLoading(true);
+        setError("");
 
-        // Demo "API call"
-        setTimeout(() => {
-            // For demo purposes, use email as the name
-            const userName = email.split("@")[0];
-            login(userName, email.trim());
+        try {
+            const response = await fetch("http://localhost:3000/api/login", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(
+                    errorData.message ||
+                        "Failed to login. Please check your credentials.",
+                );
+            }
+
+            const data = await response.json();
+            console.log("Login successful", data);
+
+            const { token, user } = data;
+            login(user.name, user.email);
+            localStorage.setItem("authToken", token);
+            router.push("/shop");
+        } catch (error) {
+            console.error("Login error:", error);
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : "An error occurred during login",
+            );
+        } finally {
             setIsLoading(false);
-            router.push("/");
-        }, 900);
+        }
     };
 
     return (
@@ -128,6 +156,12 @@ const LoginPage = () => {
                         </div>
 
                         <Divider />
+
+                        {error && (
+                            <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                                {error}
+                            </div>
+                        )}
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>

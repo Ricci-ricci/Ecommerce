@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useGlobal } from "../context/GlobalContext";
 
 const Divider = () => {
     return (
@@ -43,13 +42,13 @@ const SocialButton = ({
 };
 
 const RegisterPage = () => {
-    const { login } = useGlobal();
     const router = useRouter();
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const isValid = useMemo(() => {
         return (
@@ -59,18 +58,40 @@ const RegisterPage = () => {
         );
     }, [name, email, password]);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!isValid || isLoading) return;
 
         setIsLoading(true);
+        setError("");
 
-        // Demo "API call"
-        setTimeout(() => {
-            login(name.trim(), email.trim());
+        try {
+            const response = await fetch("http://localhost:3000/api/register", {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json",
+                },
+                body: JSON.stringify({ name, email, password }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || "Failed to register user");
+            }
+
+            const data = await response.json();
+            console.log("Registration successful:", data);
+            router.push("/login");
+        } catch (err) {
+            console.error("Registration error:", err);
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : "An error occurred during registration",
+            );
+        } finally {
             setIsLoading(false);
-            router.push("/");
-        }, 900);
+        }
     };
 
     return (
@@ -133,6 +154,12 @@ const RegisterPage = () => {
                         </div>
 
                         <Divider />
+
+                        {error && (
+                            <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                                {error}
+                            </div>
+                        )}
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
