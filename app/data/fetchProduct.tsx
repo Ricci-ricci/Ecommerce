@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { API_ENDPOINTS } from "../lib/api";
 export interface RealProduct {
     id: string;
     title: string;
@@ -23,8 +24,8 @@ const useRealProducts = () => {
     const [error, setError] = useState<string | null>(null);
     const fetchProduct = async () => {
         try {
-            console.log("Starting fetch to http://localhost:3000/api/products");
-            const response = await fetch("http://localhost:3000/api/products");
+            console.log(`Starting fetch to ${API_ENDPOINTS.products}`);
+            const response = await fetch(API_ENDPOINTS.products);
             console.log("Response status:", response.status);
             if (!response.ok) {
                 throw new Error(

@@ -4,6 +4,7 @@ import Container from "@/app/layout/container";
 import Section from "@/app/layout/section";
 import SameProduct from "@/app/components/productPart/sameProduct";
 import { RealProduct } from "@/app/data/fetchProduct";
+import { API_ENDPOINTS } from "@/app/lib/api";
 
 export default async function Page({
     params,
@@ -14,7 +15,7 @@ export default async function Page({
     let product: RealProduct | null = null;
 
     try {
-        const response = await fetch("http://localhost:3000/api/products");
+        const response = await fetch(API_ENDPOINTS.products);
         if (!response.ok) {
             throw new Error("Failed to fetch products");
         }

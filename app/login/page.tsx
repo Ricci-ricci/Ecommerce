@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useGlobal } from "../context/GlobalContext";
+import { API_ENDPOINTS } from "../lib/api";
 
 const Divider = () => {
     return (
@@ -63,7 +64,7 @@ const LoginPage = () => {
         setError("");
 
         try {
-            const response = await fetch("http://localhost:3000/api/login", {
+            const response = await fetch(API_ENDPOINTS.login, {
                 method: "POST",
                 headers: {
                     "content-type": "application/json",

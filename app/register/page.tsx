@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { API_ENDPOINTS } from "../lib/api";
 
 const Divider = () => {
     return (
@@ -66,7 +67,7 @@ const RegisterPage = () => {
         setError("");
 
         try {
-            const response = await fetch("http://localhost:3000/api/register", {
+            const response = await fetch(API_ENDPOINTS.register, {
                 method: "POST",
                 headers: {
                     "content-type": "application/json",
