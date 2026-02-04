@@ -35,12 +35,6 @@ import { Input } from "../../components/ui/input";
 import { useEffect } from "react";
 import useRealProducts from "../data/fetchProduct";
 // Categories reverted to original but with icons
-const mainCategories = [
-    { name: "Clothing", icon: Shirt },
-    { name: "Footwear", icon: Footprints },
-    { name: "Accessories", icon: Watch },
-    { name: "Electronics", icon: Smartphone },
-];
 
 const secondarySections = [
     { name: "New Arrival", icon: Search },
@@ -76,7 +70,6 @@ const SidebarShop = ({
         console.log("Fetched Products:", products);
     }, [products]);
     const categories = [
-        "All",
         ...Array.from(new Set(products.map((p) => p.categoryName))),
     ];
     const { isMobile } = useSidebar();

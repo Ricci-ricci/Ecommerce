@@ -42,17 +42,22 @@ const SocialButton = ({
     );
 };
 
-const LoginPage = () => {
+const RegisterPage = () => {
     const { login } = useGlobal();
     const router = useRouter();
 
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
     const isValid = useMemo(() => {
-        return email.trim().length > 0 && password.length >= 6;
-    }, [email, password]);
+        return (
+            name.trim().length > 0 &&
+            email.trim().length > 0 &&
+            password.length >= 6
+        );
+    }, [name, email, password]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -62,9 +67,7 @@ const LoginPage = () => {
 
         // Demo "API call"
         setTimeout(() => {
-            // For demo purposes, use email as the name
-            const userName = email.split("@")[0];
-            login(userName, email.trim());
+            login(name.trim(), email.trim());
             setIsLoading(false);
             router.push("/");
         }, 900);
@@ -77,16 +80,16 @@ const LoginPage = () => {
                 <div className="flex items-center justify-center flex-col px-6 py-10 sm:px-10 lg:px-14">
                     <div className="mx-auto w-full max-w-sm lg:mx-0">
                         <h1 className="text-center text-3xl font-extrabold tracking-tight text-gray-900 lg:text-left">
-                            Welcome back
+                            Create your account
                         </h1>
                         <p className="mt-2 text-center text-sm text-gray-500 lg:text-left">
-                            Sign in to your Spider Sense account to continue
-                            shopping.
+                            Join Spider Sense and start shopping for the best
+                            shoes online.
                         </p>
 
                         <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
                             <SocialButton
-                                label="Sign in with Google"
+                                label="Sign up with Google"
                                 icon={
                                     <svg
                                         viewBox="0 0 24 24"
@@ -101,12 +104,13 @@ const LoginPage = () => {
                                 }
                                 onClick={() => {
                                     // Demo only
+                                    setName("Guest");
                                     setEmail("guest@example.com");
                                     setPassword("password123");
                                 }}
                             />
                             <SocialButton
-                                label="Sign in with Apple"
+                                label="Sign up with Apple"
                                 icon={
                                     <svg
                                         viewBox="0 0 24 24"
@@ -121,6 +125,7 @@ const LoginPage = () => {
                                 }
                                 onClick={() => {
                                     // Demo only
+                                    setName("Apple User");
                                     setEmail("apple.user@example.com");
                                     setPassword("password123");
                                 }}
@@ -130,6 +135,23 @@ const LoginPage = () => {
                         <Divider />
 
                         <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <label htmlFor="name" className="sr-only">
+                                    Name
+                                </label>
+                                <input
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    required
+                                    autoComplete="name"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="Enter your name"
+                                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition focus:border-black focus:ring-2 focus:ring-black/10"
+                                />
+                            </div>
+
                             <div>
                                 <label htmlFor="email" className="sr-only">
                                     Email
@@ -156,12 +178,12 @@ const LoginPage = () => {
                                     name="password"
                                     type="password"
                                     required
-                                    autoComplete="current-password"
+                                    autoComplete="new-password"
                                     value={password}
                                     onChange={(e) =>
                                         setPassword(e.target.value)
                                     }
-                                    placeholder="Enter your password"
+                                    placeholder="Create a password (min. 6 characters)"
                                     className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition focus:border-black focus:ring-2 focus:ring-black/10"
                                 />
                             </div>
@@ -172,17 +194,17 @@ const LoginPage = () => {
                                 className="mt-1 inline-flex w-full items-center justify-center rounded-full bg-black px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
                             >
                                 {isLoading
-                                    ? "Signing in..."
-                                    : "Sign in with email"}
+                                    ? "Creating account..."
+                                    : "Create account"}
                             </button>
 
                             <p className="pt-2 text-center text-xs text-gray-500">
-                                Don&apos;t have an account?{" "}
+                                Already have an account?{" "}
                                 <Link
-                                    href="/register"
+                                    href="/login"
                                     className="font-semibold text-gray-900 underline underline-offset-4 hover:text-black/80"
                                 >
-                                    Sign Up
+                                    Sign In
                                 </Link>
                             </p>
                         </form>
@@ -210,7 +232,7 @@ const LoginPage = () => {
                 <div className="relative hidden lg:block">
                     <Image
                         src="/images/productTest.jpg"
-                        alt="Login visual"
+                        alt="Register visual"
                         fill
                         className="object-cover"
                         sizes="(min-width: 1024px) 50vw, 100vw"
@@ -225,4 +247,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default RegisterPage;
