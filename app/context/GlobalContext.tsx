@@ -29,7 +29,6 @@ export interface CartItem extends Product {
 
 interface User {
     name: string;
-    email: string;
 }
 
 interface GlobalContextType {
@@ -39,7 +38,7 @@ interface GlobalContextType {
     isInCart: (productId: string | number) => boolean;
     clearCart: () => void;
     user: User | null;
-    login: (name: string, email: string) => void;
+    login: (username: string) => void;
     logout: () => void;
     cartTotal: number;
     cartCount: number;
@@ -114,8 +113,8 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setCart([]);
     };
 
-    const login = (name: string, email: string) => {
-        setUser({ name, email });
+    const login = (name: string) => {
+        setUser({ name });
     };
 
     const logout = () => {

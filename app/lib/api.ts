@@ -5,16 +5,17 @@
 
 // Get the API base URL from environment variables
 // Falls back to localhost:3000 if not defined
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+export const API_BASE_URL =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 /**
  * API Endpoints
  * Centralized endpoint definitions
  */
 export const API_ENDPOINTS = {
-  products: `${API_BASE_URL}/api/products`,
-  login: `${API_BASE_URL}/api/login`,
-  register: `${API_BASE_URL}/api/register`,
+    products: `${API_BASE_URL}/api/products`,
+    login: `${API_BASE_URL}/api/auth/login`,
+    register: `${API_BASE_URL}/api/auth/register`,
 } as const;
 
 /**
@@ -23,18 +24,18 @@ export const API_ENDPOINTS = {
  * @returns Full API URL
  */
 export const getApiUrl = (endpoint: string): string => {
-  // Remove leading slash if present to avoid double slashes
-  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
-  return `${API_BASE_URL}${cleanEndpoint}`;
+    // Remove leading slash if present to avoid double slashes
+    const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    return `${API_BASE_URL}${cleanEndpoint}`;
 };
 
 /**
  * Default fetch options with common headers
  */
 export const defaultFetchOptions: RequestInit = {
-  headers: {
-    'Content-Type': 'application/json',
-  },
+    headers: {
+        "Content-Type": "application/json",
+    },
 };
 
 /**
@@ -44,25 +45,27 @@ export const defaultFetchOptions: RequestInit = {
  * @returns Fetch response
  */
 export const apiCall = async (
-  endpoint: string,
-  options: RequestInit = {}
+    endpoint: string,
+    options: RequestInit = {},
 ): Promise<Response> => {
-  const token = typeof window !== 'undefined'
-    ? localStorage.getItem('authToken')
-    : null;
+    const token =
+        typeof window !== "undefined"
+            ? localStorage.getItem("authToken")
+            : null;
 
-  const headers: HeadersInit = {
-    ...defaultFetchOptions.headers,
-    ...(options.headers || {}),
-  };
+    const headers: HeadersInit = {
+        ...defaultFetchOptions.headers,
+        ...(options.headers || {}),
+    };
 
-  if (token) {
-    (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
-  }
+    if (token) {
+        (headers as Record<string, string>)["Authorization"] =
+            `Bearer ${token}`;
+    }
 
-  return fetch(endpoint, {
-    ...defaultFetchOptions,
-    ...options,
-    headers,
-  });
+    return fetch(endpoint, {
+        ...defaultFetchOptions,
+        ...options,
+        headers,
+    });
 };

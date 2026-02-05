@@ -84,7 +84,7 @@ const LoginPage = () => {
             console.log("Login successful", data);
 
             const { token, user } = data;
-            login(user.name, user.email);
+            login(user.name);
             localStorage.setItem("authToken", token);
             router.push("/shop");
         } catch (error) {
