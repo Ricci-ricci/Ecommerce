@@ -45,7 +45,7 @@ const SocialButton = ({
 
 const LoginPage = () => {
     const router = useRouter();
-    const { login } = useGlobal();
+    const { verifylogin } = useGlobal();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -69,6 +69,7 @@ const LoginPage = () => {
                 headers: {
                     "content-type": "application/json",
                 },
+                credentials: "include",
                 body: JSON.stringify({ email, password }),
             });
 
@@ -79,13 +80,8 @@ const LoginPage = () => {
                         "Failed to login. Please check your credentials.",
                 );
             }
-
-            const data = await response.json();
-            console.log("Login successful", data);
-
-            const { token, user } = data;
-            login(user.name);
-            localStorage.setItem("authToken", token);
+            await verifylogin();
+            console.log("Login successful");
             router.push("/shop");
         } catch (error) {
             console.error("Login error:", error);

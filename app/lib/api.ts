@@ -16,6 +16,8 @@ export const API_ENDPOINTS = {
     products: `${API_BASE_URL}/api/products`,
     login: `${API_BASE_URL}/api/auth/login`,
     register: `${API_BASE_URL}/api/auth/register`,
+    verify: `${API_BASE_URL}/api/auth/verify`,
+    logout: `${API_BASE_URL}/api/auth/logout`,
 } as const;
 
 /**

@@ -50,7 +50,7 @@ const Navbar = () => {
                     {user ? (
                         <div className="flex items-center gap-2">
                             <span className="text-sm font-semibold hidden md:block">
-                                {user.name}
+                                {user.username}
                             </span>
                             <button
                                 onClick={logout}

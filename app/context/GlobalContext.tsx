@@ -7,6 +7,8 @@ import React, {
     useEffect,
     ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
+import { API_ENDPOINTS } from "../lib/api";
 
 export interface Product {
     id: string;
@@ -28,7 +30,7 @@ export interface CartItem extends Product {
 }
 
 interface User {
-    name: string;
+    username: string;
 }
 
 interface GlobalContextType {
@@ -38,8 +40,8 @@ interface GlobalContextType {
     isInCart: (productId: string | number) => boolean;
     clearCart: () => void;
     user: User | null;
-    login: (username: string) => void;
-    logout: () => void;
+    verifylogin: () => Promise<void>;
+    logout: () => Promise<void>;
     cartTotal: number;
     cartCount: number;
 }
@@ -47,6 +49,8 @@ interface GlobalContextType {
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
 export const GlobalProvider = ({ children }: { children: ReactNode }) => {
+    const router = useRouter();
+
     //stock the cart and user in a state
     const [cart, setCart] = useState<CartItem[]>([]);
     const [user, setUser] = useState<User | null>(null);
@@ -55,16 +59,16 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         //get the item inside the local storage "cart"
         const storedCart = localStorage.getItem("cart");
-        //get the item inside the local storage "user"
-        const storedUser = localStorage.getItem("user");
         //check if both are true and then parse both in json to be usable
         try {
             if (storedCart) setCart(JSON.parse(storedCart));
-            if (storedUser) setUser(JSON.parse(storedUser));
         } catch (error) {
             console.error("Failed to parse stored data", error);
         }
         setIsInitialized(true);
+
+        // Verify session with backend on app load
+        verifylogin();
     }, []);
 
     useEffect(() => {
@@ -73,16 +77,6 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         localStorage.setItem("cart", JSON.stringify(cart));
     }, [cart, isInitialized]);
 
-    useEffect(() => {
-        if (!isInitialized) return;
-        //if user exist stock it inside local storage user
-        if (user) {
-            localStorage.setItem("user", JSON.stringify(user));
-        } else {
-            //remove it
-            localStorage.removeItem("user");
-        }
-    }, [user, isInitialized]);
     //function to add to cart
     const addToCart = (product: Product) => {
         setCart((prevCart) => {
@@ -113,12 +107,45 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setCart([]);
     };
 
-    const login = (name: string) => {
-        setUser({ name });
+    const verifylogin = async () => {
+        try {
+            console.log("Verifying login session...");
+            const response = await fetch(API_ENDPOINTS.verify, {
+                method: "GET",
+                credentials: "include",
+            });
+            console.log(" Verify response status:", response.status);
+            if (!response.ok) {
+                throw new Error("Failed to verify login");
+            }
+            const data = await response.json();
+            console.log(" Verify response data:", data);
+            if (data.user && data.user.name) {
+                console.log(" User verified:", data.user.name);
+                setUser({ username: data.user.name });
+            } else {
+                console.log("No user data in response");
+            }
+        } catch (error: unknown) {
+            console.error(" Verify login error:", error);
+            setUser(null);
+        }
     };
 
-    const logout = () => {
-        setUser(null);
+    const logout = async () => {
+        try {
+            const response = await fetch(API_ENDPOINTS.logout, {
+                method: "POST",
+                credentials: "include",
+            });
+            if (!response.ok) {
+                throw new Error("Failed to logout");
+            }
+            setUser(null);
+            router.push("/login");
+        } catch (err: unknown) {
+            console.log(err);
+        }
     };
 
     const cartTotal = cart.reduce(
@@ -136,7 +163,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 isInCart,
                 clearCart,
                 user,
-                login,
+                verifylogin,
                 logout,
                 cartTotal,
                 cartCount,
