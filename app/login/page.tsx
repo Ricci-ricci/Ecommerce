@@ -45,8 +45,6 @@ const SocialButton = ({
 
 const LoginPage = () => {
     const router = useRouter();
-    const { verifylogin } = useGlobal();
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +78,6 @@ const LoginPage = () => {
                         "Failed to login. Please check your credentials.",
                 );
             }
-            await verifylogin();
             console.log("Login successful");
             router.push("/shop");
         } catch (error) {
