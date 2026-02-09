@@ -31,18 +31,18 @@ const TrendingProduct = ({
     return (
         <div className="w-full py-8">
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row justify-between items-end mb-8">
+            <div className="flex flex-col md:flex-row justify-between items-start mb-8">
                 <h2 className="text-4xl font-bold tracking-tight text-gray-900">
                     Trending Now
                 </h2>
 
-                <div className="flex gap-2 mt-4 md:mt-0">
+                <div className="flex gap-2 mt-4 md:mt-0 flex-wrap md:flex-nowrap">
                     {category.map((cat) => (
                         <Button
                             key={cat}
                             variant="outline"
                             size="sm"
-                            className="rounded-full px-6"
+                            className="rounded-full px-2 md:px-6"
                             onClick={() => onCategorySelect(cat)}
                         >
                             <span>{cat}</span>
