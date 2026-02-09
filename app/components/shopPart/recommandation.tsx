@@ -6,15 +6,16 @@ import {
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
+    type CarouselApi,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import useRealProducts from "@/app/data/fetchProduct";
 import Section from "@/app/layout/section";
 import Container from "@/app/layout/container";
 import Link from "next/link";
 import { useGlobal } from "@/app/context/GlobalContext";
-import { RealProduct } from "@/app/data/fetchProduct";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
 
@@ -22,6 +23,7 @@ export default function Recommandation() {
     const { data: products, loading, error } = useRealProducts();
     const { addToCart, isInCart, removeFromCart } = useGlobal();
     const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+    const [carouselApi, setCarouselApi] = useState<CarouselApi>();
 
     if (error) return <div>Error: {error}</div>;
 
@@ -65,6 +67,7 @@ export default function Recommandation() {
                             align: "start",
                         }}
                         className="w-full"
+                        setApi={setCarouselApi}
                     >
                         <CarouselContent>
                             {productsToDisplay.map((product) => (
@@ -148,9 +151,25 @@ export default function Recommandation() {
                                 </CarouselItem>
                             ))}
                         </CarouselContent>
-                        <CarouselPrevious />
-                        <CarouselNext />
+                        <CarouselPrevious className="hidden md:flex" />
+                        <CarouselNext className="hidden md:flex" />
                     </Carousel>
+                    <div className="flex justify-center gap-2 mt-4 md:hidden">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => carouselApi?.scrollPrev()}
+                        >
+                            <ChevronLeft className="w-4 h-4" />
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => carouselApi?.scrollNext()}
+                        >
+                            <ChevronRight className="w-4 h-4" />
+                        </Button>
+                    </div>
                 </div>
             </Container>
         </Section>
