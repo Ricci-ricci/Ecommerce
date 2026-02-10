@@ -19,7 +19,7 @@ const Product = ({ product }: { product: RealProduct }) => {
                             <Skeleton className="absolute inset-0 w-full h-full" />
                         )}
                         <img
-                            src={product.image}
+                            src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
                             alt={product.title}
                             className="object-cover object-center w-full h-full"
                             onLoad={() => setImageLoaded(true)}

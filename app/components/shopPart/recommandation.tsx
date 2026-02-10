@@ -91,9 +91,7 @@ export default function Recommandation() {
                                                                 <Skeleton className="absolute inset-0 w-full h-full" />
                                                             )}
                                                             <img
-                                                                src={
-                                                                    product.image
-                                                                }
+                                                                src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
                                                                 alt={
                                                                     product.title
                                                                 }

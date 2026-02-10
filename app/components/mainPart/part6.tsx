@@ -92,7 +92,7 @@ const TrendingProduct = ({
                                         <Skeleton className="absolute inset-0 w-full h-full" />
                                     )}
                                     <img
-                                        src={product.image}
+                                        src={`${process.env.NEXT_PUBLIC_API_URL}${product.image}`}
                                         alt={product.title}
                                         className="cursor-pointer object-cover object-center group-hover:scale-105 transition-transform duration-500 w-full h-full"
                                         onLoad={() =>
