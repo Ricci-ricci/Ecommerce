@@ -6,7 +6,8 @@
 // Get the API base URL from environment variables
 // Falls back to localhost:3000 if not defined
 export const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://backend-production-b1af.up.railway.app";
 
 /**
  * API Endpoints
