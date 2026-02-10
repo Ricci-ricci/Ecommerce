@@ -62,7 +62,7 @@ const ShowProduct = ({
                         {!loading && (
                             <>
                                 <img
-                                    src={item.image}
+                                    src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`}
                                     alt={item.title}
                                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                                     onLoad={() =>

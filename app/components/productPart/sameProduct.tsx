@@ -74,7 +74,7 @@ const SameProduct = ({ product }: { product: RealProduct }) => {
                                                     <Skeleton className="absolute inset-0 w-full h-full" />
                                                 )}
                                                 <img
-                                                    src={item.image}
+                                                    src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`}
                                                     alt={item.title}
                                                     className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                                                     onLoad={() =>

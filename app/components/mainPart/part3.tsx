@@ -84,7 +84,7 @@ const TrendingProduct = ({
                                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
                                 </Skeleton>
                             ) : (
-                                <Link href={`/products/${product.id}`}>
+                                <Link href={`/shop/${product.id}`}>
                                     {!loadedImages.has(product.id) && (
                                         <Skeleton className="absolute inset-0 w-full h-full" />
                                     )}

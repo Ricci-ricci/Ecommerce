@@ -93,7 +93,7 @@ const CartPage = () => {
                                             <Skeleton className="absolute inset-0 w-full h-full" />
                                         )}
                                         <img
-                                            src={item.image}
+                                            src={`${process.env.NEXT_PUBLIC_API_URL}${item.image}`}
                                             alt={item.title}
                                             className="w-full h-full object-cover"
                                             onLoad={() =>
