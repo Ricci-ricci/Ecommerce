@@ -40,6 +40,7 @@ interface GlobalContextType {
     isInCart: (productId: string | number) => boolean;
     clearCart: () => void;
     user: User | null;
+    setUser: (user: User | null) => void;
     verifylogin: () => Promise<void>;
     logout: () => Promise<void>;
     cartTotal: number;
@@ -163,6 +164,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
                 isInCart,
                 clearCart,
                 user,
+                setUser,
                 verifylogin,
                 logout,
                 cartTotal,
