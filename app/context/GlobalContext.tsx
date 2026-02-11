@@ -117,6 +117,8 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
             });
             console.log(" Verify response status:", response.status);
             if (!response.ok) {
+                const data = await response.json();
+                console.error(" Verify login failed:", data.message);
                 throw new Error("Failed to verify login");
             }
             const data = await response.json();
