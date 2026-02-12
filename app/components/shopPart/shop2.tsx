@@ -99,14 +99,19 @@ const Shop2 = () => {
                 <header className="flex h-16 shrink-0 items-center gap-2 px-6 border-b border-gray-100 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
                     <SidebarTrigger className="-ml-1" />
                     <div className="flex-1 flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-500">
-                            Showing {(currentPage - 1) * itemsPerPage + 1}-
-                            {Math.min(
-                                currentPage * itemsPerPage,
-                                filteredProducts.length,
-                            )}{" "}
-                            of {filteredProducts.length} results
-                        </span>
+                        <div className="flex flex-col">
+                            <span className="text-[10px] text-gray-400 md:hidden">
+                                &larr; Filter by Category
+                            </span>
+                            <span className="text-sm font-medium text-gray-500">
+                                Showing {(currentPage - 1) * itemsPerPage + 1}-
+                                {Math.min(
+                                    currentPage * itemsPerPage,
+                                    filteredProducts.length,
+                                )}{" "}
+                                of {filteredProducts.length} results
+                            </span>
+                        </div>
                     </div>
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-6">
