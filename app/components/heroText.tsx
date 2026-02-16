@@ -7,7 +7,7 @@ const HeroText = () => {
 
     return (
         <div className="flex flex-col gap-6 items-center justify-center text-center">
-            <span className="text-lg font-light md:text-xl">{intro}</span>
+            <span className="text-lg font-bold md:text-2xl">{intro}</span>
             <span className="text-4xl font-bold md:text-8xl">{Fall}</span>
             <Link href="/shop">
                 <Button className="font-bold text-lg cursor-pointer px-6 py-4 mt-4">
