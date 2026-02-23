@@ -6,6 +6,7 @@ export interface RealProduct {
     title: string;
     description: string;
     price: number;
+    rating: number;
     stock: number;
     published: boolean;
     image: string;

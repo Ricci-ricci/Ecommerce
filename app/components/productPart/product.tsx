@@ -40,6 +40,14 @@ const Product = ({ product }: { product: RealProduct }) => {
                                 ${product.price}
                             </p>
                         </div>
+                        <div className="flex justify-center items-center mb-6 space-x-2">
+                            <span className="text-yellow-500 text-3xl">
+                                {"★".repeat(Math.floor(product.rating))}
+                            </span>
+                            <span className="text-gray-700 text-2xl">
+                                {product.rating}
+                            </span>
+                        </div>
 
                         <div className="prose prose-gray max-w-none mb-8">
                             <h3 className="text-lg font-semibold text-gray-900 mb-2">
