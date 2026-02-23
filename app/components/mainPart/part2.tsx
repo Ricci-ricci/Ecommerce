@@ -27,6 +27,7 @@ const ShowProduct = ({
             title: "Loading",
             description: "Loading product description...",
             price: 0,
+            rating: 0,
             image: "",
             stock: 0,
             published: true,

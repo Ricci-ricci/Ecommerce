@@ -173,6 +173,7 @@ const Part3 = () => {
                   title: "",
                   description: "",
                   price: 0,
+                  rating: 0,
                   image: "",
                   stock: 0,
                   published: true,
