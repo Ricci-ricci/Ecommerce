@@ -11,6 +11,7 @@ interface Product {
     title: string;
     description: string;
     price: number;
+    rating: number;
     image: string;
     stock: number;
     published: boolean;
@@ -136,6 +137,14 @@ const ProductGrid = ({
                                 <span className="text-2xl font-bold text-gray-900">
                                     ${product.price}
                                 </span>
+                                <div>
+                                    <span className="text-yellow-500 text-3xl">
+                                        {"★".repeat(Math.floor(product.rating))}
+                                    </span>
+                                    <span className="text-gray-700 text-2xl">
+                                        {product.rating}
+                                    </span>
+                                </div>
                             </div>
                             <div className="grid grid-cols-2 gap-3 mt-auto">
                                 <Button
