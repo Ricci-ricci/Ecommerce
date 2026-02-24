@@ -19,10 +19,20 @@ export const API_ENDPOINTS = {
     register: `${API_BASE_URL}/api/auth/register`,
     verify: `${API_BASE_URL}/api/auth/verify`,
     logout: `${API_BASE_URL}/api/auth/logout`,
-    sync: `${API_BASE_URL}/api/cart/sync`,
+
+    // Cart routes (see backend cartRoute)
+    // POST   /api/cart           -> addToCart
+    // GET    /api/cart           -> getCart
+    // PUT    /api/cart/items/:id -> updateCartItem
+    // DELETE /api/cart/items/:id -> removeCartItem
+    // POST   /api/cart/sync      -> syncCart
+    // DELETE /api/cart           -> clearCart (you said you updated backend to not require userId)
     getCart: `${API_BASE_URL}/api/cart`,
-    addToCart: `${API_BASE_URL}/api/cart/add`,
-    removeFromCart: `${API_BASE_URL}/api/cart/remove`,
+    addToCart: `${API_BASE_URL}/api/cart`,
+    updateCartItem: `${API_BASE_URL}/api/cart/items`,
+    removeCartItem: `${API_BASE_URL}/api/cart/items`,
+    clearCart: `${API_BASE_URL}/api/cart`,
+    sync: `${API_BASE_URL}/api/cart/sync`,
 } as const;
 
 /**
