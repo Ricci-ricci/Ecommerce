@@ -49,7 +49,7 @@ const LoginPage = () => {
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
-    const { setUser } = useGlobal();
+    const { setUser, syncCart } = useGlobal();
 
     const isValid = useMemo(() => {
         return email.trim().length > 0 && password.length >= 6;
@@ -82,6 +82,10 @@ const LoginPage = () => {
             console.log("Login successful");
             const data = await response.json();
             setUser({ username: data.user.name });
+            const syncResult = await syncCart();
+            if (!syncResult.success) {
+                console.error("Failed to sync cart:", syncResult.message);
+            }
             router.push("/shop");
         } catch (error) {
             console.error("Login error:", error);

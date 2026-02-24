@@ -10,10 +10,35 @@ import React, {
 import { useRouter } from "next/navigation";
 import { API_ENDPOINTS } from "../lib/api";
 
+type BackendCartProduct = Product;
+
+type BackendCartItem = {
+    quantity: number;
+    product: BackendCartProduct;
+};
+
+type BackendCart = {
+    id: string;
+    userId: string;
+    items: BackendCartItem[];
+};
+
+type SyncCartResponse =
+    | {
+          success: true;
+          message: string;
+          data: BackendCart | null;
+      }
+    | {
+          success: false;
+          message: string;
+      };
+
 export interface Product {
     id: string;
     title: string;
     price: number;
+    rating: number;
     image: string;
     description?: string;
     categoryName?: string;
@@ -45,6 +70,7 @@ interface GlobalContextType {
     logout: () => Promise<void>;
     cartTotal: number;
     cartCount: number;
+    syncCart: () => Promise<SyncCartResponse>;
 }
 //create a global context to use a global state across the app
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -108,6 +134,45 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
         setCart([]);
     };
 
+    const mapBackendCartToCartItems = (backendCart: BackendCart | null) => {
+        if (!backendCart?.items) return [];
+        return backendCart.items.map((item) => ({
+            ...item.product,
+            quantity: item.quantity,
+        }));
+    };
+
+    const syncCart = async (): Promise<SyncCartResponse> => {
+        console.log("synchronizing cart");
+
+        const response = await fetch(API_ENDPOINTS.sync, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ guestCart: cart }),
+        });
+
+        const data: SyncCartResponse = await response.json().catch(() => ({
+            success: false,
+            message: "Invalid JSON response from server",
+        }));
+
+        if (!response.ok) {
+            console.log("failed to sync the cart", data);
+            return data;
+        }
+
+        if (data.success) {
+            const nextCart = mapBackendCartToCartItems(data.data);
+            setCart(nextCart);
+        }
+
+        console.log(data);
+        return data;
+    };
+
     const verifylogin = async () => {
         try {
             console.log("Verifying login session...");
@@ -160,6 +225,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
     return (
         <GlobalContext.Provider
             value={{
+                syncCart,
                 cart,
                 addToCart,
                 removeFromCart,

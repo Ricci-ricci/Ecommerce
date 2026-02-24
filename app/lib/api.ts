@@ -19,6 +19,10 @@ export const API_ENDPOINTS = {
     register: `${API_BASE_URL}/api/auth/register`,
     verify: `${API_BASE_URL}/api/auth/verify`,
     logout: `${API_BASE_URL}/api/auth/logout`,
+    sync: `${API_BASE_URL}/api/cart/sync`,
+    getCart: `${API_BASE_URL}/api/cart`,
+    addToCart: `${API_BASE_URL}/api/cart/add`,
+    removeFromCart: `${API_BASE_URL}/api/cart/remove`,
 } as const;
 
 /**
